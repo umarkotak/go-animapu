@@ -11,3 +11,21 @@ clean:
 
 heroku: $(DOCKER_CMD)
 	heroku container:push web
+
+cli_app:
+	@echo "Start building binaries..."
+	@go build -o build/bin/go_animapu_cli cmd/go_animapu_cli/main.go
+	@chmod +x build/bin/go_animapu_cli
+	@echo "Finish build"
+
+run_cli:
+	@./build/bin/go_animapu_cli
+
+web_app:
+	@echo "Start building binaries..."
+	@go build -o build/bin/go_animapu_webb cmd/go_animapu_webb/main.go
+	@chmod +x build/bin/go_animapu_webb
+	@echo "Finish build"
+
+run_web:
+	@./build/bin/go_animapu_web
