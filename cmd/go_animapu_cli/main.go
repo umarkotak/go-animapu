@@ -3,11 +3,15 @@ package main
 import (
 	"fmt"
 
-	"github.com/umarkotak/go-animapu/internal"
+	rManga "github.com/umarkotak/go-animapu/internal/repository/manga"
+	sManga "github.com/umarkotak/go-animapu/internal/service/manga"
 )
 
 func main() {
 	fmt.Println("Welcome to go-animapu CLI")
 
-	internal.GetMangaFromJSON()
+	mangaDB := rManga.GetMangaFromJSON()
+	mangaDB = sManga.UpdateMangaChapters(mangaDB)
+	mangaDB = rManga.UpdateMangaToJSON(mangaDB)
+
 }

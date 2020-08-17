@@ -1,6 +1,6 @@
 GO_BUILD_ENV := CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 DOCKER_BUILD=$(shell pwd)/.docker_build
-DOCKER_CMD=$(DOCKER_BUILD)/go-getting-started
+DOCKER_CMD=$(DOCKER_BUILD)/go_animapu_web
 
 $(DOCKER_CMD): clean
 	mkdir -p $(DOCKER_BUILD)
@@ -23,8 +23,8 @@ run_cli:
 
 web_app:
 	@echo "Start building binaries..."
-	@go build -o build/bin/go_animapu_webb cmd/go_animapu_webb/main.go
-	@chmod +x build/bin/go_animapu_webb
+	@go build -o build/bin/go_animapu_web cmd/go_animapu_web/main.go
+	@chmod +x build/bin/go_animapu_web
 	@echo "Finish build"
 
 run_web:

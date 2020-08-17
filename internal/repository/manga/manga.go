@@ -1,4 +1,4 @@
-package repository
+package manga
 
 import (
 	"encoding/json"
@@ -9,9 +9,12 @@ import (
 	"github.com/umarkotak/go-animapu/internal/models"
 )
 
-// GetMangaFromJSON read manga from data/
-func GetMangaFromJSON() {
-	var mangaDbFilePath = "../../data/mangas_play.json"
+var mangaDbFilePath = "data/mangas_play.json"
+
+// var mangaDbFilePath = "data/mangas.json"
+
+// GetMangaFromJSON read manga from json db in data/
+func GetMangaFromJSON() models.MangaDB {
 	mangaDbJSONFile, err := os.Open(mangaDbFilePath)
 	if err != nil {
 		fmt.Println(err)
@@ -24,4 +27,12 @@ func GetMangaFromJSON() {
 	json.Unmarshal([]byte(mangaDbByteValue), &mangaDB)
 
 	return mangaDB
+}
+
+// UpdateMangaToJSON update manga to json db in data/
+func UpdateMangaToJSON(mangaDb models.MangaDB) models.MangaDB {
+	mangaDbJSON, _ := json.Marshal(mangaDb)
+	ioutil.WriteFile(mangaDbFilePath, mangaDbJSON, 0644)
+
+	return mangaDb
 }
