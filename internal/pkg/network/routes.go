@@ -14,6 +14,7 @@ func RouterStart(port string) {
 
 	router.GET("/ping", cPing.GetPing)
 	router.GET("/mangas", cManga.GetManga)
+	router.GET("/mangas/update", cManga.UpdateManga)
 
 	router.Run(":" + port)
 }

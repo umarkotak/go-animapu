@@ -9,7 +9,7 @@ import (
 	"github.com/umarkotak/go-animapu/internal/models"
 )
 
-var mangaDbFilePath = "data/mangas_play.json"
+var mangaDbFilePath = "data/mangas.json"
 
 // var mangaDbFilePath = "data/mangas.json"
 

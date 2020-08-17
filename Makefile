@@ -29,4 +29,5 @@ web_app:
 	echo "Finish build"
 
 run_web:
-	@PORT=3000 ./bin/go_animapu_web
+	@PORT=3005 ./bin/go_animapu_web
+	echo "Web is running"
