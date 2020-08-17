@@ -16,5 +16,5 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
-	network.RouterStart()
+	network.RouterStart(port)
 }

@@ -13,19 +13,20 @@ heroku: $(DOCKER_CMD)
 	heroku container:push web
 
 cli_app:
-	@echo "Start building binaries..."
-	@go build -o build/bin/go_animapu_cli cmd/go_animapu_cli/main.go
-	@chmod +x build/bin/go_animapu_cli
-	@echo "Finish build"
+	echo "Start building binaries..."
+	go build -o bin/go_animapu_cli cmd/go_animapu_cli/main.go
+	chmod +x bin/go_animapu_cli
+	echo "Finish build"
 
 run_cli:
-	@./build/bin/go_animapu_cli
+	./bin/go_animapu_cli
 
 web_app:
-	@echo "Start building binaries..."
-	@go build -o build/bin/go_animapu_web cmd/go_animapu_web/main.go
-	@chmod +x build/bin/go_animapu_web
-	@echo "Finish build"
+	echo "Start building binaries..."
+	rm -rf bin/go_animapu_web
+	go build -o bin/go_animapu_web cmd/go_animapu_web/main.go
+	chmod +x bin/go_animapu_web
+	echo "Finish build"
 
 run_web:
-	@./build/bin/go_animapu_web
+	@PORT=3000 ./bin/go_animapu_web

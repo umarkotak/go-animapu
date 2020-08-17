@@ -14,21 +14,21 @@ import (
 func main() {
 	RunManga()
 
-	// port := os.Getenv("PORT")
+	port := os.Getenv("PORT")
 
-	// if port == "" {
-	// 	log.Fatal("$PORT must be set")
-	// }
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 
-	// router := gin.New()
-	// router.Use(gin.Logger())
+	router := gin.New()
+	router.Use(gin.Logger())
 
-	// router.GET("/", getRoot)
-	// router.GET("/ping", getPing)
-	// router.GET("/mangas", getMangas)
-	// router.GET("/update_mangas", getUpdateMangas)
+	router.GET("/", getRoot)
+	router.GET("/ping", getPing)
+	router.GET("/mangas", getMangas)
+	router.GET("/update_mangas", getUpdateMangas)
 
-	// router.Run(":" + port)
+	router.Run(":" + port)
 }
 
 func getRoot(c *gin.Context) {
