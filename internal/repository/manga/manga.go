@@ -36,3 +36,8 @@ func UpdateMangaToJSON(mangaDb models.MangaDB) models.MangaDB {
 
 	return mangaDb
 }
+
+// GetMangaFromFireBase fetch manga from firebase
+func GetMangaFromFireBase() {
+
+}
