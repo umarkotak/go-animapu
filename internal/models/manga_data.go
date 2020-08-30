@@ -7,4 +7,5 @@ type MangaData struct {
 	Status           string `json:"status"`
 	ImageURL         string `json:"image_url"`
 	NewAdded         int    `json:"new_added"`
+	Weight           int    `json:"weight"`
 }
