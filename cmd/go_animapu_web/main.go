@@ -5,11 +5,14 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/umarkotak/go-animapu/internal/pkg/network"
 )
 
 func main() {
 	fmt.Println("Welcome to go-animapu WEB")
+
+	initBaseConfiguration()
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -17,4 +20,8 @@ func main() {
 	}
 
 	network.RouterStart(port)
+}
+
+func initBaseConfiguration() {
+	godotenv.Load(".env")
 }

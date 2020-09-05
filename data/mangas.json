@@ -9,11 +9,11 @@
             "weight": 0
         },
         "a-returner-s-magic-should-be-special": {
-            "manga_last_chapter": 117,
+            "manga_last_chapter": 118,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 1,
             "weight": 1000
         },
         "ahiru-no-sora": {
@@ -21,7 +21,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 22,
+            "new_added": 29,
             "weight": 50
         },
         "akagami-no-shirayukihime": {
@@ -29,7 +29,7 @@
             "average_page": 50,
             "status": "finished",
             "image_url": "",
-            "new_added": 37,
+            "new_added": 0,
             "weight": 50
         },
         "akame-ga-kill": {
@@ -40,36 +40,36 @@
             "new_added": 0,
             "weight": 50
         },
+        "ansatsu-kyoushitsu": {
+            "manga_last_chapter": 184,
+            "average_page": 60,
+            "status": "finished",
+            "image_url": "",
+            "new_added": 0,
+            "weight": 1000
+        },
         "arifureta-shokugyou-de-sekai-saikyou": {
             "manga_last_chapter": 44,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 1000
-        },
-        "ansatsu-kyoushitsu": {
-          "manga_last_chapter": 184,
-          "average_page": 60,
-          "status": "finished",
-          "image_url": "",
-          "new_added": 1,
-          "weight": 1000
         },
         "attack-on-titan": {
             "manga_last_chapter": 131,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 41,
+            "new_added": 48,
             "weight": 2000
         },
         "baby-steps": {
-            "manga_last_chapter": 393,
+            "manga_last_chapter": 394,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 1000
         },
         "ballroom-e-youkoso": {
@@ -77,7 +77,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 42,
+            "new_added": 49,
             "weight": 1000
         },
         "battle-in-5-seconds-after-meeting": {
@@ -85,15 +85,15 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 50
         },
         "black-clover": {
-            "manga_last_chapter": 262,
+            "manga_last_chapter": 263,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 2000
         },
         "bleach": {
@@ -105,11 +105,11 @@
             "weight": 70
         },
         "blue-lock": {
-            "manga_last_chapter": 97,
+            "manga_last_chapter": 98,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 1000
         },
         "boku-girl": {
@@ -117,15 +117,15 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 7,
+            "new_added": 0,
             "weight": 50
         },
         "boku-no-hero-academia": {
-            "manga_last_chapter": 282,
+            "manga_last_chapter": 283,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 3000
         },
         "bokura-wa-minna-kawaisou": {
@@ -133,7 +133,7 @@
             "average_page": 50,
             "status": "finished",
             "image_url": "",
-            "new_added": 51,
+            "new_added": 0,
             "weight": 50
         },
         "bokutachi-wa-benkyou-ga-dekinai": {
@@ -141,7 +141,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 1000
         },
         "boruto-naruto-next-generations": {
@@ -149,7 +149,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 3000
         },
         "bungou-stray-dogs": {
@@ -157,7 +157,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 3000
         },
         "claymore": {
@@ -165,7 +165,7 @@
             "average_page": 50,
             "status": "finished",
             "image_url": "",
-            "new_added": 62,
+            "new_added": 0,
             "weight": 50
         },
         "darwin-s-game": {
@@ -173,7 +173,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 3000
         },
         "denpa-kyoushi": {
@@ -181,7 +181,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 3,
+            "new_added": 10,
             "weight": 1000
         },
         "detective-conan": {
@@ -189,7 +189,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 12,
+            "new_added": 19,
             "weight": 1000
         },
         "domestic-na-kanojo": {
@@ -197,7 +197,7 @@
             "average_page": 50,
             "status": "finished",
             "image_url": "",
-            "new_added": 56,
+            "new_added": 0,
             "weight": 50
         },
         "dr-stone": {
@@ -205,7 +205,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 3000
         },
         "dungeon-ni-deai-o-motomeru-no-wa-machigatte-iru-darou-ka": {
@@ -213,15 +213,15 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 70,
+            "new_added": 77,
             "weight": 2000
         },
         "eden-s-zero": {
-            "manga_last_chapter": 107,
+            "manga_last_chapter": 108,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 1000
         },
         "eyeshield-21": {
@@ -245,7 +245,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 3,
+            "new_added": 10,
             "weight": 3000
         },
         "fuuka": {
@@ -253,15 +253,15 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 7,
+            "new_added": 0,
             "weight": 50
         },
         "gate-jietai-kare-no-chi-nite-kaku-tatakeri": {
-            "manga_last_chapter": 96,
+            "manga_last_chapter": 97,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 7,
             "weight": 1000
         },
         "gekkan-shoujo-nozaki-kun": {
@@ -269,15 +269,15 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "gleipnir": {
-            "manga_last_chapter": 55,
+            "manga_last_chapter": 56,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 7,
             "weight": 50
         },
         "go-toubun-no-hanayome": {
@@ -293,7 +293,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "gosu": {
@@ -301,7 +301,7 @@
             "average_page": 70,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 3,
+            "new_added": 10,
             "weight": 50
         },
         "haikyuu": {
@@ -309,15 +309,15 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 75,
+            "new_added": 82,
             "weight": 3000
         },
         "hardcore-leveling-warrior": {
-            "manga_last_chapter": 239,
+            "manga_last_chapter": 240,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 1000
         },
         "hibi-chouchou": {
@@ -325,7 +325,7 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 54,
+            "new_added": 0,
             "weight": 60
         },
         "hirunaka-no-ryuusei": {
@@ -333,7 +333,7 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 7,
+            "new_added": 0,
             "weight": 50
         },
         "horimiya": {
@@ -341,7 +341,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 38,
+            "new_added": 45,
             "weight": 3000
         },
         "hunter-x-hunter": {
@@ -349,7 +349,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 50
         },
         "i-am-the-sorcerer-king": {
@@ -357,15 +357,15 @@
             "average_page": 70,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 3,
+            "new_added": 10,
             "weight": 3000
         },
         "i-was-trash": {
-            "manga_last_chapter": 206,
+            "manga_last_chapter": 209,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 5,
             "weight": 50
         },
         "isekai-nonbiri-nouka": {
@@ -373,7 +373,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 20,
+            "new_added": 27,
             "weight": 50
         },
         "jagaaaaaan": {
@@ -381,7 +381,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 2000
         },
         "jumyou-wo-kaitotte-moratta-ichinen-ni-tsuki-ichimanen-de": {
@@ -393,11 +393,11 @@
             "weight": 50
         },
         "kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen": {
-            "manga_last_chapter": 198,
+            "manga_last_chapter": 199,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 7,
             "weight": 2000
         },
         "kakao-79": {
@@ -405,15 +405,15 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "kanojo-okarishimasu": {
-            "manga_last_chapter": 153,
+            "manga_last_chapter": 154,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 2000
         },
         "karakai-jouzu-no-moto-takagi-san": {
@@ -421,7 +421,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 2000
         },
         "karakai-jouzu-no-takagi-san": {
@@ -429,7 +429,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 2000
         },
         "kekkaishi": {
@@ -449,19 +449,19 @@
             "weight": 50
         },
         "kengan-omega": {
-            "manga_last_chapter": 74,
+            "manga_last_chapter": 75,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 2000
         },
         "kenja-no-mago": {
-            "manga_last_chapter": 51,
+            "manga_last_chapter": 52,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 7,
             "weight": 50
         },
         "kimetsu-no-yaiba": {
@@ -473,19 +473,19 @@
             "weight": 50
         },
         "kingdom": {
-            "manga_last_chapter": 651,
+            "manga_last_chapter": 652,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 4000
         },
         "knights-magic": {
-            "manga_last_chapter": 69,
+            "manga_last_chapter": 70,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 7,
             "weight": 50
         },
         "koi-to-uso": {
@@ -493,15 +493,15 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 7,
+            "new_added": 0,
             "weight": 50
         },
         "komi-san-wa-komyushou-desu": {
-            "manga_last_chapter": 264,
+            "manga_last_chapter": 265,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 50
         },
         "konjiki-no-moji-tsukai-yuusha-yonin-ni-makikomareta-unique-cheat": {
@@ -509,7 +509,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 50
         },
         "kono-oto-tomare": {
@@ -517,7 +517,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 41,
+            "new_added": 48,
             "weight": 3000
         },
         "last-game": {
@@ -533,7 +533,7 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 7,
+            "new_added": 0,
             "weight": 50
         },
         "lv999-no-murabito": {
@@ -541,7 +541,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "made-in-abyss": {
@@ -549,7 +549,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 1000
         },
         "magi-labyrinth-of-magic": {
@@ -573,7 +573,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 50
         },
         "masamune-kun-no-revenge": {
@@ -581,7 +581,7 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 7,
+            "new_added": 0,
             "weight": 50
         },
         "murabito-desu-ga-nani-ka": {
@@ -589,15 +589,15 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "my-wife-is-a-demon-queen": {
-            "manga_last_chapter": 217,
+            "manga_last_chapter": 218,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 2000
         },
         "namaikizakari": {
@@ -605,7 +605,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 50
         },
         "nanatsu-no-taizai": {
@@ -613,7 +613,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 50
         },
         "naruto": {
@@ -629,31 +629,31 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "noragami": {
-            "manga_last_chapter": 89,
+            "manga_last_chapter": 90,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 7,
             "weight": 2000
         },
         "omniscient-reader-s-viewpoint": {
-            "manga_last_chapter": 19,
+            "manga_last_chapter": 20,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 2000
         },
         "one-piece": {
-            "manga_last_chapter": 988,
+            "manga_last_chapter": 989,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 7,
             "weight": 4000
         },
         "onepunch-man": {
@@ -661,7 +661,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 48,
+            "new_added": 55,
             "weight": 3000
         },
         "out-makoto-mizuta": {
@@ -669,23 +669,23 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 3000
         },
         "peerless-dad": {
-            "manga_last_chapter": 137,
+            "manga_last_chapter": 138,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 1000
         },
         "player-reborn": {
-            "manga_last_chapter": 180,
+            "manga_last_chapter": 183,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 12,
+            "new_added": 2,
             "weight": 50
         },
         "ranker-who-lives-a-second-time": {
@@ -693,15 +693,15 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 2000
         },
         "rebirth-of-the-urban-immortal-cultivator": {
-            "manga_last_chapter": 461,
+            "manga_last_chapter": 464,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 2,
+            "new_added": 5,
             "weight": 50
         },
         "record-of-ragnarok": {
@@ -709,7 +709,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 45,
+            "new_added": 52,
             "weight": 3000
         },
         "relife": {
@@ -725,7 +725,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 50
         },
         "senryuu-shoujo": {
@@ -733,7 +733,7 @@
             "average_page": 25,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 64,
+            "new_added": 71,
             "weight": 50
         },
         "shaman-king": {
@@ -741,7 +741,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "shigatsu-wa-kimi-no-uso": {
@@ -753,11 +753,11 @@
             "weight": 50
         },
         "shikkaku-mon-no-saikyou-kenja": {
-            "manga_last_chapter": 36,
+            "manga_last_chapter": 37,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 7,
             "weight": 50
         },
         "shokugeki-no-soma": {
@@ -777,11 +777,11 @@
             "weight": 50
         },
         "solo-leveling": {
-            "manga_last_chapter": 116,
+            "manga_last_chapter": 117,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 4000
         },
         "sousei-no-onmyouji": {
@@ -789,7 +789,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "taiyou-no-ie": {
@@ -797,7 +797,7 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 7,
+            "new_added": 0,
             "weight": 50
         },
         "tamen-de-gushi": {
@@ -805,7 +805,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 1000
         },
         "tate-no-yuusha-no-nariagari": {
@@ -813,39 +813,39 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 2000
         },
         "tensei-shitara-slime-datta-ken": {
-            "manga_last_chapter": 73,
+            "manga_last_chapter": 74,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 59,
+            "new_added": 7,
             "weight": 1000
         },
         "the-beginning-after-the-end": {
-            "manga_last_chapter": 72,
+            "manga_last_chapter": 73,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 2000
         },
         "the-god-of-high-school": {
-            "manga_last_chapter": 478,
+            "manga_last_chapter": 479,
             "average_page": 75,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 7,
             "weight": 1000
         },
         "the-legendary-moonlight-sculptor": {
-            "manga_last_chapter": 159,
+            "manga_last_chapter": 160,
             "average_page": 100,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 7,
             "weight": 3000
         },
         "the-world-god-only-knows": {
@@ -869,7 +869,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "tonari-no-kaibutsu-kun": {
@@ -877,7 +877,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "tonari-no-kashiwagi-san": {
@@ -885,7 +885,7 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 7,
+            "new_added": 0,
             "weight": 50
         },
         "tower-of-god": {
@@ -893,7 +893,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 21,
+            "new_added": 28,
             "weight": 50
         },
         "tsubaki-chou-lonely-planet": {
@@ -909,15 +909,15 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 50
         },
         "versatile-mage": {
-            "manga_last_chapter": 535,
+            "manga_last_chapter": 539,
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 5,
+            "new_added": 4,
             "weight": 50
         },
         "vinland-saga": {
@@ -925,15 +925,15 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 13,
+            "new_added": 20,
             "weight": 50
         },
         "virtual-world-close-combat-mage": {
-            "manga_last_chapter": 100,
+            "manga_last_chapter": 101,
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 12,
+            "new_added": 7,
             "weight": 50
         },
         "wotaku-ni-koi-wa-muzukashii": {
@@ -941,7 +941,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 14,
+            "new_added": 21,
             "weight": 50
         },
         "yagate-kimi-ni-naru": {
@@ -949,7 +949,7 @@
             "average_page": 60,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "yakusoku-no-neverland": {
@@ -973,7 +973,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 20,
+            "new_added": 27,
             "weight": 50
         },
         "yowamushi-pedal": {
@@ -981,7 +981,7 @@
             "average_page": 50,
             "status": "ongoing",
             "image_url": "",
-            "new_added": 27,
+            "new_added": 34,
             "weight": 50
         },
         "yumemiru-taiyou": {
@@ -989,7 +989,7 @@
             "average_page": 60,
             "status": "finished",
             "image_url": "",
-            "new_added": 3,
+            "new_added": 0,
             "weight": 50
         }
     }

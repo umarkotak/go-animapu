@@ -37,3 +37,21 @@ func UpdateManga(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(200, mangaDB)
 }
+
+// GetMangaFirebase get manga from firebase
+func GetMangaFirebase(c *gin.Context) {
+	mangaDB := rManga.GetMangaFromFireBaseV2()
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.JSON(200, mangaDB)
+}
+
+// UpdateMangaFirebase update mangat to firebase
+func UpdateMangaFirebase(c *gin.Context) {
+	mangaDB := rManga.GetMangaFromFireBaseV2()
+	mangaDB = sManga.UpdateMangaChapters(mangaDB)
+	mangaDB = rManga.UpdateMangaToFireBase(mangaDB)
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.JSON(200, mangaDB)
+}
