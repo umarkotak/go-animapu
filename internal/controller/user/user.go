@@ -12,10 +12,18 @@ import (
 
 // RegisterUserFirebase get list of all manga in DB
 func RegisterUserFirebase(c *gin.Context) {
-	userDataBase := models.UserData{
-		Username: c.PostForm("username"),
-		Password: c.PostForm("password"),
+	type RequestParamms struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
 	}
+	var json RequestParamms
+	c.BindJSON(&json)
+
+	userDataBase := models.UserData{
+		Username: json.Username,
+		Password: json.Password,
+	}
+
 	userData, err := sUser.RegisterService(userDataBase)
 
 	var response gin.H
@@ -41,10 +49,18 @@ func RegisterUserFirebase(c *gin.Context) {
 
 // LoginUser run update manga
 func LoginUser(c *gin.Context) {
-	userDataBase := models.UserData{
-		Username: c.PostForm("username"),
-		Password: c.PostForm("password"),
+	type RequestParamms struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
 	}
+	var json RequestParamms
+	c.BindJSON(&json)
+
+	userDataBase := models.UserData{
+		Username: json.Username,
+		Password: json.Password,
+	}
+
 	userData, err := sUser.LoginService(userDataBase)
 
 	var response gin.H
@@ -98,11 +114,18 @@ func GetDetailFirebase(c *gin.Context) {
 func LogReadHistories(c *gin.Context) {
 	auth := c.Request.Header["Authorization"][0]
 
+	type RequestParamms struct {
+		LastChapter string `json:"last_chapter"`
+		MangaTitle  string `json:"manga_title"`
+	}
+	var json RequestParamms
+	c.BindJSON(&json)
+
 	loc, _ := time.LoadLocation("UTC")
 	now := time.Now().In(loc)
-	lastChapter, _ := strconv.Atoi(c.PostForm("last_chapter"))
+	lastChapter, _ := strconv.Atoi(json.LastChapter)
 	readHistory := models.ReadHistory{
-		MangaTitle:    c.PostForm("manga_title"),
+		MangaTitle:    json.MangaTitle,
 		LastChapter:   lastChapter,
 		LastReadTime:  now.Format(time.RFC3339),
 		LastReadTimeI: now.Unix(),
