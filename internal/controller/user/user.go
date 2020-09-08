@@ -96,10 +96,10 @@ func LogReadHistories(c *gin.Context) {
 	now := time.Now().In(loc)
 	lastChapter, _ := strconv.Atoi(c.PostForm("last_chapter"))
 	readHistory := models.ReadHistory{
-		MangaTitle:   c.PostForm("manga_title"),
-		LastChapter:  lastChapter,
-		LastReadTime: now.Format(time.RFC3339),
-		LastReadAtI:  now.Unix(),
+		MangaTitle:    c.PostForm("manga_title"),
+		LastChapter:   lastChapter,
+		LastReadTime:  now.Format(time.RFC3339),
+		LastReadTimeI: now.Unix(),
 	}
 
 	userData, err := sUser.DetailService(auth)

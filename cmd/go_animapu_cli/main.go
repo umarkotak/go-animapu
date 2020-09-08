@@ -41,10 +41,10 @@ func learnUserFirebase() {
 		Password: "goodbye",
 		ReadHistories: map[string]*models.ReadHistory{
 			"a-returner-s-magic-should-be-special": {
-				MangaTitle:  "a-returner-s-magic-should-be-special",
-				LastChapter: 10,
-				LastReadAt:  "2020-01-01T00:00",
-				LastReadAtI: 1000,
+				MangaTitle:    "a-returner-s-magic-should-be-special",
+				LastChapter:   10,
+				LastReadTime:  "2020-01-01T00:00",
+				LastReadTimeI: 1000,
 			},
 		},
 	}
