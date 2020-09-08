@@ -34,6 +34,8 @@ func RegisterUserFirebase(c *gin.Context) {
 		statusCode = 200
 	}
 	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	c.JSON(statusCode, response)
 }
 
@@ -61,6 +63,8 @@ func LoginUser(c *gin.Context) {
 		statusCode = 200
 	}
 	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	c.JSON(statusCode, response)
 }
 
@@ -85,6 +89,8 @@ func GetDetailFirebase(c *gin.Context) {
 		statusCode = 200
 	}
 	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	c.JSON(statusCode, response)
 }
 
@@ -129,5 +135,7 @@ func LogReadHistories(c *gin.Context) {
 		statusCode = 200
 	}
 	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	c.JSON(statusCode, response)
 }
