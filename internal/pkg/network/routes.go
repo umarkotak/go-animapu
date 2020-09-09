@@ -29,6 +29,7 @@ func RouterStart(port string) {
 	router.POST("/users/read_histories", cUser.LogReadHistories)
 	router.OPTIONS("/users/read_histories", cUser.SkipCors)
 	router.GET("/users/detail", cUser.GetDetailFirebase)
+	router.OPTIONS("/users/detail", cUser.SkipCors)
 
 	router.Run(":" + port)
 }
