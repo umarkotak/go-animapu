@@ -74,7 +74,8 @@ func UpdateMangaToFireBase(mangaDB models.MangaDB) models.MangaDB {
 	firebaseDB := firebaseHelper.GetFirebaseDB()
 
 	ref := firebaseDB.NewRef("")
-	err := ref.Set(ctx, mangaDB)
+	mangaRef := ref.Child("manga_db")
+	err := mangaRef.Set(ctx, mangaDB.MangaDatas)
 	if err != nil {
 		log.Fatalln("Error setting value:", err)
 	}
