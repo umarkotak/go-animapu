@@ -16,9 +16,8 @@ func SetUserToFirebase(userData models.UserData) models.UserData {
 
 	ref := firebaseDB.NewRef("")
 	userRef := ref.Child("user_db")
-	err := userRef.Set(ctx, map[string]*models.UserData{
-		"hello": &userData,
-	})
+	userDataRef := userRef.Child(userData.Username)
+	err := userDataRef.Set(ctx, &userData)
 
 	if err != nil {
 		log.Fatalln("Error setting value:", err)

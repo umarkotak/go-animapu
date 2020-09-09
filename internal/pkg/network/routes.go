@@ -23,11 +23,11 @@ func RouterStart(port string) {
 
 	// users
 	router.POST("/users/register", cUser.RegisterUserFirebase)
-	router.OPTIONS("/users/register", cUser.RegisterUserFirebase)
+	router.OPTIONS("/users/register", cUser.SkipCors)
 	router.POST("/users/login", cUser.LoginUser)
-	router.OPTIONS("/users/login", cUser.LoginUser)
+	router.OPTIONS("/users/login", cUser.SkipCors)
 	router.POST("/users/read_histories", cUser.LogReadHistories)
-	router.OPTIONS("/users/read_histories", cUser.LogReadHistories)
+	router.OPTIONS("/users/read_histories", cUser.SkipCors)
 	router.GET("/users/detail", cUser.GetDetailFirebase)
 
 	router.Run(":" + port)
