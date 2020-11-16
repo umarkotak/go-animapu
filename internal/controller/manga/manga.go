@@ -10,6 +10,7 @@ import (
 
 	rManga "github.com/umarkotak/go-animapu/internal/repository/manga"
 	sManga "github.com/umarkotak/go-animapu/internal/service/manga"
+	sScrapper "github.com/umarkotak/go-animapu/internal/service/scrapper"
 )
 
 // GetManga get list of all manga in DB
@@ -53,5 +54,17 @@ func UpdateMangaFirebase(c *gin.Context) {
 	mangaDB = rManga.UpdateMangaToFireBase(mangaDB)
 
 	c.Header("Access-Control-Allow-Origin", "*")
+	c.JSON(200, mangaDB)
+}
+
+// GetMangaSearch search manga title
+func GetMangaSearch(c *gin.Context) {
+	title := c.Query("title")
+
+	mangaDB := sScrapper.SearchMangaTitle(title)
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	c.JSON(200, mangaDB)
 }

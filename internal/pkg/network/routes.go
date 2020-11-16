@@ -21,6 +21,7 @@ func RouterStart(port string) {
 	router.GET("/mangas/update", cManga.UpdateManga)
 	router.GET("/mangas/firebase", cManga.GetMangaFirebase)
 	router.GET("/mangas/firebase/update", cManga.UpdateMangaFirebase)
+	router.GET("/mangas/search_v1", cManga.GetMangaSearch)
 
 	// users
 	router.POST("/users/register", cUser.RegisterUserFirebase)

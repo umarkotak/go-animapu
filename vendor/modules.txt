@@ -46,9 +46,6 @@ github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
 # github.com/googleapis/gax-go/v2 v2.0.5
 github.com/googleapis/gax-go/v2
-# github.com/heroku/x v0.0.0-20171004170240-705849e307dd
-github.com/heroku/x/hmetrics
-github.com/heroku/x/hmetrics/onload
 # github.com/joho/godotenv v1.3.0
 github.com/joho/godotenv
 # github.com/jstemmer/go-junit-report v0.9.1
@@ -61,8 +58,6 @@ github.com/manucorporat/sse
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.0-20150814002629-7fcbc72f853b
 github.com/mattn/go-isatty
-# github.com/mitchellh/mapstructure v1.3.3
-github.com/mitchellh/mapstructure
 # go.opencensus.io v0.22.4
 go.opencensus.io
 go.opencensus.io/internal
