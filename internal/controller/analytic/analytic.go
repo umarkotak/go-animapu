@@ -39,7 +39,7 @@ func sanitizeClientIP(clientIP string) string {
 	sanitizedIP := clientIP
 	sanitizedIP = strings.Replace(sanitizedIP, "[", "", -1)
 	sanitizedIP = strings.Replace(sanitizedIP, "]", "", -1)
-	sanitizedIP = strings.Replace(sanitizedIP, ".", "", -1)
+	sanitizedIP = strings.Replace(sanitizedIP, ".", "-", -1)
 	sanitizedIP = strings.Replace(sanitizedIP, "/", "", -1)
 	sanitizedIP = strings.Replace(sanitizedIP, "$", "", -1)
 
