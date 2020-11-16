@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	cPing "github.com/umarkotak/go-animapu/internal/controller"
+	cAnalytic "github.com/umarkotak/go-animapu/internal/controller/analytic"
 	cManga "github.com/umarkotak/go-animapu/internal/controller/manga"
 	cUser "github.com/umarkotak/go-animapu/internal/controller/user"
 )
@@ -30,6 +31,10 @@ func RouterStart(port string) {
 	router.OPTIONS("/users/read_histories", cUser.SkipCors)
 	router.GET("/users/detail", cUser.GetDetailFirebase)
 	router.OPTIONS("/users/detail", cUser.SkipCors)
+
+	// users analytic
+	router.POST("/users/analytic_v1", cAnalytic.PostUserAnalyticV1)
+	router.OPTIONS("/users/analytic_v1", cAnalytic.SkipCors)
 
 	router.Run(":" + port)
 }

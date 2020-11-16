@@ -12,11 +12,11 @@ import (
 
 // RegisterUserFirebase get list of all manga in DB
 func RegisterUserFirebase(c *gin.Context) {
-	type RequestParamms struct {
+	type RequestParams struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
-	var json RequestParamms
+	var json RequestParams
 	c.BindJSON(&json)
 
 	userDataBase := models.UserData{
@@ -49,11 +49,11 @@ func RegisterUserFirebase(c *gin.Context) {
 
 // LoginUser run update manga
 func LoginUser(c *gin.Context) {
-	type RequestParamms struct {
+	type RequestParams struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
-	var json RequestParamms
+	var json RequestParams
 	c.BindJSON(&json)
 
 	userDataBase := models.UserData{
@@ -114,11 +114,11 @@ func GetDetailFirebase(c *gin.Context) {
 func LogReadHistories(c *gin.Context) {
 	auth := c.Request.Header["Authorization"][0]
 
-	type RequestParamms struct {
+	type RequestParams struct {
 		LastChapter string `json:"last_chapter"`
 		MangaTitle  string `json:"manga_title"`
 	}
-	var json RequestParamms
+	var json RequestParams
 	c.BindJSON(&json)
 
 	loc, _ := time.LoadLocation("UTC")

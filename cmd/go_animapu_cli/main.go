@@ -5,6 +5,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/umarkotak/go-animapu/internal/models"
+	rAnalytic "github.com/umarkotak/go-animapu/internal/repository/analytic"
 	rManga "github.com/umarkotak/go-animapu/internal/repository/manga"
 	rUser "github.com/umarkotak/go-animapu/internal/repository/user"
 	sManga "github.com/umarkotak/go-animapu/internal/service/manga"
@@ -17,7 +18,10 @@ func main() {
 
 	initBaseConfiguration()
 
-	// learnUserFirebase()
+	dummy := models.AnalyticData{}
+	rAnalytic.UpdateAnalyticToFireBase(dummy)
+
+	fmt.Println("Thanks for using go-animapu CLI")
 }
 
 func initBaseConfiguration() {
