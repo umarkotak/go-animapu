@@ -13,8 +13,10 @@ import (
 func SearchMangaTitle(title string) models.MangaDB {
 	c := colly.NewCollector()
 
-	var finalMangaTitles []string
-	var finalMangaChapters []int
+	var finalMangaTitles map[string]string = make(map[string]string)
+	var finalMangaChapters map[string]int = make(map[string]int)
+	titleIdx := 1
+	chapterIdx := 1
 
 	c.OnHTML(".media-left", func(e *colly.HTMLElement) {
 		imageLink := e.ChildAttr("a img", "src")
@@ -30,7 +32,8 @@ func SearchMangaTitle(title string) models.MangaDB {
 		sanitizedTitle := strings.Replace(choosenTitle, ".jpg", "", -1)
 		sanitizedTitle = strings.Replace(sanitizedTitle, ".png", "", -1)
 
-		finalMangaTitles = append(finalMangaTitles, sanitizedTitle)
+		finalMangaTitles[strconv.Itoa(titleIdx)] = sanitizedTitle
+		titleIdx++
 	})
 
 	c.OnHTML(".media-body p", func(e *colly.HTMLElement) {
@@ -51,7 +54,8 @@ func SearchMangaTitle(title string) models.MangaDB {
 		latestPage, _ := strconv.Atoi(sanitizedWord)
 
 		if latestPage != 0 {
-			finalMangaChapters = append(finalMangaChapters, latestPage)
+			finalMangaChapters[strconv.Itoa(chapterIdx)] = latestPage
+			chapterIdx++
 		}
 	})
 
@@ -65,21 +69,19 @@ func SearchMangaTitle(title string) models.MangaDB {
 	var mangaDB models.MangaDB
 	mangaDB.MangaDatas = make(map[string]*models.MangaData)
 
-	for i, title := range finalMangaTitles {
-		for j, chapter := range finalMangaChapters {
-			if i == j {
-				mangaData := models.MangaData{
-					MangaLastChapter: chapter,
-					AveragePage:      120,
-					Status:           "ongoing",
-					ImageURL:         "",
-					NewAdded:         1,
-					Weight:           25000,
-					Finder:           "external",
-				}
-				mangaDB.MangaDatas[title] = &mangaData
-			}
+	maxWeight := 1000000
+	for key, title := range finalMangaTitles {
+		weight, _ := strconv.Atoi(key)
+		mangaData := models.MangaData{
+			MangaLastChapter: finalMangaChapters[key],
+			AveragePage:      120,
+			Status:           "ongoing",
+			ImageURL:         "",
+			NewAdded:         1,
+			Weight:           maxWeight - weight,
+			Finder:           "external",
 		}
+		mangaDB.MangaDatas[title] = &mangaData
 	}
 
 	return mangaDB
@@ -91,7 +93,6 @@ func GetTodaysMangaTitle() models.MangaDB {
 	var finalMangaChapters map[string]int = make(map[string]int)
 	titleIdx := 1
 	chapterIdx := 1
-	maxWeight := 100000
 
 	c := colly.NewCollector()
 
@@ -141,18 +142,19 @@ func GetTodaysMangaTitle() models.MangaDB {
 	var mangaDB models.MangaDB
 	mangaDB.MangaDatas = make(map[string]*models.MangaData)
 
+	maxWeight := 1000000
 	for key, title := range finalMangaTitles {
+		weight, _ := strconv.Atoi(key)
 		mangaData := models.MangaData{
 			MangaLastChapter: finalMangaChapters[key],
 			AveragePage:      120,
 			Status:           "ongoing",
 			ImageURL:         "",
 			NewAdded:         1,
-			Weight:           maxWeight,
+			Weight:           maxWeight - weight,
 			Finder:           "external",
 		}
 		mangaDB.MangaDatas[title] = &mangaData
-		maxWeight--
 	}
 
 	return mangaDB
