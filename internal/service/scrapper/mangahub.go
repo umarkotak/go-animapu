@@ -63,8 +63,8 @@ func SearchMangaTitle(title string) models.MangaDB {
 	c.Visit("https://mangahub.io/search?q=" + title + "&order=POPULAR&genre=all")
 	// c.Visit("https://mangahub.io")
 
-	fmt.Println(finalMangaTitles)
-	fmt.Println(finalMangaChapters)
+	// fmt.Println(finalMangaTitles)
+	// fmt.Println(finalMangaChapters)
 
 	var mangaDB models.MangaDB
 	mangaDB.MangaDatas = make(map[string]*models.MangaData)
@@ -150,6 +150,77 @@ func GetTodaysMangaTitle() models.MangaDB {
 			AveragePage:      120,
 			Status:           "ongoing",
 			ImageURL:         "",
+			NewAdded:         1,
+			Weight:           maxWeight - weight,
+			Finder:           "external",
+		}
+		mangaDB.MangaDatas[title] = &mangaData
+	}
+
+	return mangaDB
+}
+
+// GetTodaysMangaTitleV2 get manga titles
+func GetTodaysMangaTitleV2() models.MangaDB {
+	var finalMangaTitles map[string]string = make(map[string]string)
+	var finalMangaChapters map[string]int = make(map[string]int)
+	var rawImageLinks map[string]string = make(map[string]string)
+	titleIdx := 1
+
+	c := colly.NewCollector()
+
+	c.OnHTML(".panel.panel-default li", func(e *colly.HTMLElement) {
+		imageLink := e.ChildAttr("a img", "src")
+
+		splittedStrings := strings.Split(imageLink, "/")
+		lenString := len(splittedStrings)
+		var choosenTitle string
+		for i, v := range splittedStrings {
+			if i == lenString-1 {
+				choosenTitle = v
+			}
+		}
+		sanitizedTitle := strings.Replace(choosenTitle, ".jpg", "", -1)
+		sanitizedTitle = strings.Replace(sanitizedTitle, ".png", "", -1)
+
+		textDesc := e.ChildText("li a span")
+		var choosenText string
+		var words []string
+		var word string
+		if strings.Contains(textDesc, "#") {
+			choosenText = textDesc
+			words = strings.Fields(choosenText)
+		}
+		for i, v := range words {
+			if i == 0 {
+				word = v
+			}
+		}
+		sanitizedWord := strings.Replace(word, "#", "", -1)
+		latestPage, _ := strconv.Atoi(sanitizedWord)
+		finalMangaChapters[strconv.Itoa(titleIdx)] = latestPage
+
+		finalMangaTitles[strconv.Itoa(titleIdx)] = sanitizedTitle
+		rawImageLinks[strconv.Itoa(titleIdx)] = imageLink
+
+		fmt.Printf("%v | %v | %v \n", titleIdx, sanitizedTitle, latestPage)
+
+		titleIdx++
+	})
+
+	c.Visit("https://mangahub.io")
+
+	var mangaDB models.MangaDB
+	mangaDB.MangaDatas = make(map[string]*models.MangaData)
+
+	maxWeight := 1000000
+	for key, title := range finalMangaTitles {
+		weight, _ := strconv.Atoi(key)
+		mangaData := models.MangaData{
+			MangaLastChapter: finalMangaChapters[key],
+			AveragePage:      120,
+			Status:           "ongoing",
+			ImageURL:         rawImageLinks[key],
 			NewAdded:         1,
 			Weight:           maxWeight - weight,
 			Finder:           "external",

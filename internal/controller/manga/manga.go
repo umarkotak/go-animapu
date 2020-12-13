@@ -71,7 +71,7 @@ func GetMangaSearch(c *gin.Context) {
 
 // GetMangaTodays list of todays manga
 func GetMangaTodays(c *gin.Context) {
-	mangaDB := sScrapper.GetTodaysMangaTitle()
+	mangaDB := sScrapper.GetTodaysMangaTitleV2()
 
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
