@@ -1,7 +1,6 @@
 package scrapper
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -51,7 +50,8 @@ func SearchMangaTitle(title string) models.MangaDB {
 			}
 		}
 		sanitizedWord := strings.Replace(word, "#", "", -1)
-		latestPage, _ := strconv.Atoi(sanitizedWord)
+		latestPageFloat64, _ := strconv.ParseFloat(sanitizedWord, 64)
+		latestPage := int(latestPageFloat64)
 
 		if latestPage != 0 {
 			finalMangaChapters[strconv.Itoa(chapterIdx)] = latestPage
@@ -61,7 +61,6 @@ func SearchMangaTitle(title string) models.MangaDB {
 
 	title = strings.Replace(title, " ", "%20", -1)
 	c.Visit("https://mangahub.io/search?q=" + title + "&order=POPULAR&genre=all")
-	// c.Visit("https://mangahub.io")
 
 	// fmt.Println(finalMangaTitles)
 	// fmt.Println(finalMangaChapters)
@@ -197,13 +196,14 @@ func GetTodaysMangaTitleV2() models.MangaDB {
 			}
 		}
 		sanitizedWord := strings.Replace(word, "#", "", -1)
-		latestPage, _ := strconv.Atoi(sanitizedWord)
+		latestPageFloat64, _ := strconv.ParseFloat(sanitizedWord, 64)
+		latestPage := int(latestPageFloat64)
 		finalMangaChapters[strconv.Itoa(titleIdx)] = latestPage
 
 		finalMangaTitles[strconv.Itoa(titleIdx)] = sanitizedTitle
 		rawImageLinks[strconv.Itoa(titleIdx)] = imageLink
 
-		fmt.Printf("%v | %v | %v \n", titleIdx, sanitizedTitle, latestPage)
+		// fmt.Printf("%v | %v | %v \n", titleIdx, sanitizedTitle, latestPage)
 
 		titleIdx++
 	})
