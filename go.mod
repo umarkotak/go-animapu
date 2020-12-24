@@ -11,6 +11,7 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/gocolly/colly/v2 v2.1.0 // indirect
 	github.com/google/uuid v1.1.2 // indirect
+	github.com/gorilla/websocket v1.4.2
 	github.com/heroku/x v0.0.0-20171004170240-705849e307dd // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/manucorporat/sse v0.0.0-20150604091100-c142f0f1baea // indirect

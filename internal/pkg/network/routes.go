@@ -5,8 +5,10 @@ import (
 
 	cPing "github.com/umarkotak/go-animapu/internal/controller"
 	cAnalytic "github.com/umarkotak/go-animapu/internal/controller/analytic"
+	cChats "github.com/umarkotak/go-animapu/internal/controller/chats"
 	cManga "github.com/umarkotak/go-animapu/internal/controller/manga"
 	cUser "github.com/umarkotak/go-animapu/internal/controller/user"
+	"github.com/umarkotak/go-animapu/internal/models"
 )
 
 // RouterStart this is entry porint for all http request to go-animapu web
@@ -37,6 +39,13 @@ func RouterStart(port string) {
 	// users analytic
 	router.POST("/users/analytic_v1", cAnalytic.PostUserAnalyticV1)
 	router.OPTIONS("/users/analytic_v1", cAnalytic.SkipCors)
+
+	hub := models.NewHub()
+	go hub.Run()
+
+	router.GET("/chats_v1", func(c *gin.Context) {
+		cChats.GetChatsConnection(c, hub)
+	})
 
 	router.Run(":" + port)
 }
