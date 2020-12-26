@@ -2,10 +2,14 @@ package models
 
 import (
 	"bytes"
+	"context"
+	"encoding/json"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
+	firebaseHelper "github.com/umarkotak/go-animapu/internal/pkg/firebase_helper"
 )
 
 const (
@@ -19,11 +23,6 @@ var (
 	newline = []byte{'\n'}
 	space   = []byte{' '}
 )
-
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
 
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
@@ -54,7 +53,18 @@ func (c *Client) ReadPump() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.Hub.Broadcast <- message
+
+		var messageObj Message
+		json.Unmarshal(message, &messageObj)
+		timestampUnix := int32(time.Now().Unix())
+		timestampUTC := time.Now().Format("2006-01-02T15:04:05Z07:00")
+		messageObj.TimestampUnix = timestampUnix
+		messageObj.TimestampUTC = timestampUTC
+		processedMessage, err := json.Marshal(messageObj)
+		go SetChatMessageToFirebase(messageObj)
+
+		// c.Hub.Broadcast <- message
+		c.Hub.Broadcast <- processedMessage
 	}
 }
 
@@ -102,4 +112,31 @@ func (c *Client) WritePump() {
 			}
 		}
 	}
+}
+
+var ctx = context.Background()
+
+// SetChatMessageToFirebase save message to firebase
+func SetChatMessageToFirebase(message Message) Message {
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+
+	ref := firebaseDB.NewRef("")
+	messagesRef := ref.Child("chat_message_db")
+	messageDataRef := messagesRef.Child(strconv.Itoa(int(message.TimestampUnix)))
+	messageDataRef.Set(ctx, &message)
+
+	return message
+}
+
+func GetChatMessagesFromFirebase() map[string]Message {
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+	var messages map[string]Message
+
+	ref := firebaseDB.NewRef("")
+	messagesRef := ref.Child("chat_message_db")
+	if err := messagesRef.Get(ctx, &messages); err != nil {
+		log.Fatalln("Error reading from database:", err)
+	}
+
+	return messages
 }
