@@ -8,7 +8,7 @@ import (
 	rManga "github.com/umarkotak/go-animapu/internal/repository/manga"
 	rUser "github.com/umarkotak/go-animapu/internal/repository/user"
 	sManga "github.com/umarkotak/go-animapu/internal/service/manga"
-	"github.com/umarkotak/go-animapu/internal/service/scrapper"
+	sOnesignal "github.com/umarkotak/go-animapu/internal/service/onesignal"
 )
 
 var mangaDB models.MangaDB
@@ -18,7 +18,9 @@ func main() {
 
 	initBaseConfiguration()
 
-	scrapper.GetTodaysMangaTitleV2()
+	mangaDB = rManga.GetMangaFromJSON()
+	mangaDB = sManga.UpdateMangaChapters(mangaDB)
+	// scrapper.GetTodaysMangaTitleV2()
 
 	fmt.Println("Thanks for using go-animapu CLI")
 }
@@ -31,6 +33,7 @@ func learnMangaJSON() {
 	mangaDB = rManga.GetMangaFromJSON()
 	mangaDB = sManga.UpdateMangaChapters(mangaDB)
 	mangaDB = rManga.UpdateMangaToFireBase(mangaDB)
+	sOnesignal.SendWebNotification("New chapter update!", "one piece, enen no shoubutai, boruto, william moriarty, black clover")
 }
 
 func learnMangaFirebase() {

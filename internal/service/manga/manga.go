@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/umarkotak/go-animapu/internal/models"
+	sOnesignal "github.com/umarkotak/go-animapu/internal/service/onesignal"
 )
 
 var mangaHubCDN = "https://img.mghubcdn.com/file/imghub"
@@ -14,6 +16,7 @@ var respJpg, respPng *http.Response
 
 // UpdateMangaChapters fetch ;atest manga chapter from mangahub
 func UpdateMangaChapters(mangaDB models.MangaDB) models.MangaDB {
+	var updatedMangaTitles []string
 	var keys []string
 	for k := range mangaDB.MangaDatas {
 		keys = append(keys, k)
@@ -41,11 +44,20 @@ func UpdateMangaChapters(mangaDB models.MangaDB) models.MangaDB {
 			mangaData.MangaLastChapter = mangaUpdatedChapter
 			mangaData.NewAdded = 1
 			fmt.Println("[UPDATED]", mangaTitle, " From: ", mangaLatestChapter, " To: ", mangaUpdatedChapter)
+			updatedMangaTitles = append(updatedMangaTitles, mangaTitle)
 		} else {
 			mangaData.NewAdded++
 			fmt.Println("[NO-UPDATE]", mangaTitle)
 		}
 		mangaDB.MangaDatas[v] = mangaData
+	}
+
+	if len(updatedMangaTitles) > 0 {
+		joinedString := strings.Join(updatedMangaTitles[:], ", ")
+		joinedString = strings.Replace(joinedString, "-", " ", -1)
+		fmt.Println("Updated titles: " + joinedString)
+
+		sOnesignal.SendWebNotification("New chapter update!", joinedString)
 	}
 
 	return mangaDB
