@@ -18,6 +18,7 @@ require (
 	github.com/mattn/go-colorable v0.0.0-20150625154642-40e4aedc8fab // indirect
 	github.com/mattn/go-isatty v0.0.0-20150814002629-7fcbc72f853b // indirect
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43 // indirect
 	google.golang.org/api v0.31.0
 	gopkg.in/bluesuncorp/validator.v5 v5.10.3 // indirect

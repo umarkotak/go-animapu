@@ -5,6 +5,7 @@ import (
 
 	cPing "github.com/umarkotak/go-animapu/internal/controller"
 	cAnalytic "github.com/umarkotak/go-animapu/internal/controller/analytic"
+	cAnimes "github.com/umarkotak/go-animapu/internal/controller/animes"
 	cChats "github.com/umarkotak/go-animapu/internal/controller/chats"
 	cClips "github.com/umarkotak/go-animapu/internal/controller/clips"
 	cManga "github.com/umarkotak/go-animapu/internal/controller/manga"
@@ -46,6 +47,9 @@ func RouterStart(port string) {
 	router.GET("/clips", cClips.GetClips)
 	router.POST("/clips", cClips.CreateClip)
 	router.OPTIONS("/clips", cUser.SkipCors)
+
+	// animepahe
+	router.GET("/animes_map", cAnimes.GetAnimesMap)
 
 	hub := models.NewHub()
 	go hub.Run()
