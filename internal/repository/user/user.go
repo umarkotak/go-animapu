@@ -2,9 +2,12 @@ package manga
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/umarkotak/go-animapu/internal/models"
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/pkg/app_cache"
 	firebaseHelper "github.com/umarkotak/go-animapu/internal/pkg/firebase_helper"
 )
 
@@ -28,6 +31,14 @@ func SetUserToFirebase(userData models.UserData) models.UserData {
 
 // GetUserByUsernameFromFirebase get user from firebase by username
 func GetUserByUsernameFromFirebase(username string) models.UserData {
+	appCache := pkgAppCache.GetAppCache()
+
+	res, found := appCache.Get("user_firebase")
+	if found {
+		fmt.Println("FETCH FROM APP CACHE")
+		return res.(models.UserData)
+	}
+
 	firebaseDB := firebaseHelper.GetFirebaseDB()
 
 	ref := firebaseDB.NewRef("user_db")
@@ -36,6 +47,8 @@ func GetUserByUsernameFromFirebase(username string) models.UserData {
 	if err := userRef.Get(ctx, &userData); err != nil {
 		log.Fatalln("Error reading from database:", err)
 	}
+
+	appCache.Set("user_firebase", userData, 5*time.Minute)
 
 	return userData
 }

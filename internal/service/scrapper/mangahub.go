@@ -1,11 +1,14 @@
 package scrapper
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gocolly/colly"
 	"github.com/umarkotak/go-animapu/internal/models"
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/pkg/app_cache"
 )
 
 // SearchMangaTitle from mangahub search page
@@ -88,6 +91,14 @@ func SearchMangaTitle(title string) models.MangaDB {
 
 // GetTodaysMangaTitle get manga titles
 func GetTodaysMangaTitle() models.MangaDB {
+	appCache := pkgAppCache.GetAppCache()
+
+	res, found := appCache.Get("mangahub_todays_manga")
+	if found {
+		fmt.Println("FETCH FROM APP CACHE")
+		return res.(models.MangaDB)
+	}
+
 	var finalMangaTitles map[string]string = make(map[string]string)
 	var finalMangaChapters map[string]int = make(map[string]int)
 	titleIdx := 1
@@ -156,11 +167,21 @@ func GetTodaysMangaTitle() models.MangaDB {
 		mangaDB.MangaDatas[title] = &mangaData
 	}
 
+	appCache.Set("mangahub_todays_manga", mangaDB, 5*time.Minute)
+
 	return mangaDB
 }
 
 // GetTodaysMangaTitleV2 get manga titles
 func GetTodaysMangaTitleV2() models.MangaDB {
+	appCache := pkgAppCache.GetAppCache()
+
+	res, found := appCache.Get("mangahub_todays_manga")
+	if found {
+		fmt.Println("FETCH FROM APP CACHE")
+		return res.(models.MangaDB)
+	}
+
 	var finalMangaTitles map[string]string = make(map[string]string)
 	var finalMangaChapters map[string]int = make(map[string]int)
 	var rawImageLinks map[string]string = make(map[string]string)
@@ -227,6 +248,8 @@ func GetTodaysMangaTitleV2() models.MangaDB {
 		}
 		mangaDB.MangaDatas[title] = &mangaData
 	}
+
+	appCache.Set("mangahub_todays_manga", mangaDB, 5*time.Minute)
 
 	return mangaDB
 }

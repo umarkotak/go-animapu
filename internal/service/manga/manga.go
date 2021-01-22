@@ -6,8 +6,10 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/umarkotak/go-animapu/internal/models"
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/pkg/app_cache"
 	sOnesignal "github.com/umarkotak/go-animapu/internal/service/onesignal"
 )
 
@@ -16,6 +18,14 @@ var respJpg, respPng *http.Response
 
 // UpdateMangaChapters fetch ;atest manga chapter from mangahub
 func UpdateMangaChapters(mangaDB models.MangaDB) models.MangaDB {
+	appCache := pkgAppCache.GetAppCache()
+
+	res, found := appCache.Get("update_manga_chapter")
+	if found {
+		fmt.Println("FETCH FROM APP CACHE")
+		return res.(models.MangaDB)
+	}
+
 	var updatedMangaTitles []string
 	var keys []string
 	for k := range mangaDB.MangaDatas {
@@ -59,6 +69,8 @@ func UpdateMangaChapters(mangaDB models.MangaDB) models.MangaDB {
 
 		sOnesignal.SendWebNotification("New chapter update!", joinedString)
 	}
+
+	appCache.Set("update_manga_chapter", mangaDB, 5*time.Minute)
 
 	return mangaDB
 }

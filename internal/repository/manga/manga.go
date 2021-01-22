@@ -7,8 +7,10 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"time"
 
 	"github.com/umarkotak/go-animapu/internal/models"
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/pkg/app_cache"
 	firebaseHelper "github.com/umarkotak/go-animapu/internal/pkg/firebase_helper"
 )
 
@@ -58,6 +60,14 @@ func GetMangaFromFireBaseV1() models.MangaDB {
 
 // GetMangaFromFireBaseV2 using direct struct
 func GetMangaFromFireBaseV2() models.MangaDB {
+	appCache := pkgAppCache.GetAppCache()
+
+	res, found := appCache.Get("manga_from_firebase_v2")
+	if found {
+		fmt.Println("FETCH FROM APP CACHE")
+		return res.(models.MangaDB)
+	}
+
 	firebaseDB := firebaseHelper.GetFirebaseDB()
 
 	ref := firebaseDB.NewRef("")
@@ -66,6 +76,7 @@ func GetMangaFromFireBaseV2() models.MangaDB {
 		log.Fatalln("Error reading from database:", err)
 	}
 
+	appCache.Set("manga_from_firebase_v2", mangaDB, 5*time.Minute)
 	return mangaDB
 }
 
