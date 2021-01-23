@@ -9,6 +9,7 @@ import (
 	cChats "github.com/umarkotak/go-animapu/internal/controller/chats"
 	cClips "github.com/umarkotak/go-animapu/internal/controller/clips"
 	cManga "github.com/umarkotak/go-animapu/internal/controller/manga"
+	cSocketGame "github.com/umarkotak/go-animapu/internal/controller/socket_game"
 	cUser "github.com/umarkotak/go-animapu/internal/controller/user"
 	"github.com/umarkotak/go-animapu/internal/models"
 )
@@ -56,6 +57,13 @@ func RouterStart(port string) {
 
 	router.GET("/chats_v1", func(c *gin.Context) {
 		cChats.GetChatsConnection(c, hub)
+	})
+
+	world := models.NewWorld()
+	go world.Run()
+
+	router.GET("/socket_game_v1", func(c *gin.Context) {
+		cSocketGame.Serve(c, world)
 	})
 
 	router.Run(":" + port)
