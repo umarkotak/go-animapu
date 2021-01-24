@@ -71,7 +71,9 @@ func (w *World) handleGameMessage(gameMessage GameMessage) {
 	case GmGlobalMessage:
 		w.serviceGlobalMessage(gameMessage)
 	case GmWorldMapInfo:
-		w.serviceWorldMapInfo(gameMessage)
+		w.serviceWorldMapInfo(gameMessage, "private")
+	case GmPlayerMove:
+		w.servicePlayerMove(gameMessage)
 	default:
 	}
 }
@@ -100,7 +102,7 @@ func (w *World) serviceGlobalMessage(gameMessage GameMessage) {
 	}
 }
 
-func (w *World) serviceWorldMapInfo(gameMessage GameMessage) {
+func (w *World) serviceWorldMapInfo(gameMessage GameMessage, target string) {
 	selectedPlayer := w.PlayerDB[gameMessage.Player.Name]
 	tempPlayers := map[string][]string{}
 
@@ -141,7 +143,40 @@ func (w *World) serviceWorldMapInfo(gameMessage GameMessage) {
 	}
 	response, _ := json.Marshal(responseBroadcast)
 
-	selectedPlayer.Send <- []byte(response)
+	if target == "private" {
+		selectedPlayer.Send <- []byte(response)
+
+	} else {
+		for player := range w.Players {
+			select {
+			case player.Send <- []byte(response):
+			default:
+				close(player.Send)
+				delete(w.Players, player)
+			}
+		}
+	}
+}
+
+func (w *World) servicePlayerMove(gameMessage GameMessage) {
+	selectedPlayer := w.PlayerDB[gameMessage.Player.Name]
+	value := gameMessage.Data["value"].(float64)
+
+	if gameMessage.Data["direction"] == "right" {
+		selectedPlayer.PlayerInfo.PosX += int64(value)
+
+	} else if gameMessage.Data["direction"] == "left" {
+		selectedPlayer.PlayerInfo.PosX -= int64(value)
+
+	} else if gameMessage.Data["direction"] == "up" {
+		selectedPlayer.PlayerInfo.PosY -= int64(value)
+
+	} else if gameMessage.Data["direction"] == "down" {
+		selectedPlayer.PlayerInfo.PosY += int64(value)
+
+	}
+
+	w.serviceWorldMapInfo(gameMessage, "public")
 }
 
 func (w *World) serviceError(gameMessage GameMessage) {

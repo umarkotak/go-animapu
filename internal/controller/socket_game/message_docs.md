@@ -127,3 +127,17 @@
 	"headers": {},
   "direction": "response"
 }
+
+## Request player move
+{
+  "message_type": "player_move",
+	"meta": {},
+	"data": {
+    "direction": "right/left/up/down",
+    "value": 1,
+    "pos_x": 1,
+    "pos_y": 1
+  },
+	"headers": {},
+  "direction": "request"
+}

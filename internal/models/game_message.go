@@ -5,6 +5,7 @@ const (
 	GmPlayerInfo    = "player_info"
 	GmWorldMapInfo  = "world_map_info"
 	GmGlobalMessage = "global_message"
+	GmPlayerMove    = "player_move"
 )
 
 type GameMessage struct {
