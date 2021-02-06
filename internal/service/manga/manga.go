@@ -126,12 +126,16 @@ func checkMangaLatestChapter(wg *sync.WaitGroup, mangaTitle string, mangaDB mode
 	}
 
 	targetPathJPG := mangaHubCDN + "/" + mangaTitle + "/" + strconv.Itoa(mangaUpdatedChapter) + "/1.jpg"
+	targetPathJPG2 := mangaHubCDN + "/" + mangaTitle + "/" + strconv.Itoa(mangaUpdatedChapter) + "/5.jpg"
 	targetPathPNG := mangaHubCDN + "/" + mangaTitle + "/" + strconv.Itoa(mangaUpdatedChapter) + "/1.png"
+	targetPathJPEG := mangaHubCDN + "/" + mangaTitle + "/" + strconv.Itoa(mangaUpdatedChapter) + "/1.png"
 
 	resultJpg, _ := http.Get(targetPathJPG)
+	resultJpg2, _ := http.Get(targetPathJPG2)
 	resultPng, _ := http.Get(targetPathPNG)
+	resultJpeg, _ := http.Get(targetPathJPEG)
 
-	if resultJpg.Status == "200 OK" || resultPng.Status == "200 OK" {
+	if resultJpg.Status == "200 OK" || resultPng.Status == "200 OK" || resultJpeg.Status == "200 OK" || resultJpg2.Status == "200 OK" {
 		mangaData.MangaLastChapter = mangaUpdatedChapter
 		mangaData.NewAdded = 1
 		fmt.Println("[UPDATED]", mangaTitle, " From: ", mangaLatestChapter, " To: ", mangaUpdatedChapter)
