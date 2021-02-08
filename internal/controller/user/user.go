@@ -163,6 +163,72 @@ func LogReadHistories(c *gin.Context) {
 	c.JSON(statusCode, response)
 }
 
+// AddToMyMangaLibrary add manga to my library
+func AddToMyMangaLibrary(c *gin.Context) {
+	var response gin.H
+	var statusCode int
+
+	auth := c.Request.Header["Authorization"][0]
+	userData, err := sUser.DetailService(auth)
+	if err != nil {
+		response = gin.H{
+			"message": err.Error(),
+		}
+		statusCode = 400
+	}
+
+	var myLibrary models.MyLibrary
+	c.BindJSON(&myLibrary)
+
+	myLibrary.AveragePage = 100
+	myLibrary.NewAdded = 0
+	myLibrary.Status = "ongoing"
+	myLibrary.Weight = 1000
+	myLibrary.Finder = userData.Username
+
+	res, err := sUser.StoreMangaToMyLibrary(userData, myLibrary)
+	fmt.Println(res)
+
+	if err == nil {
+		response = gin.H{
+			"added_title": myLibrary.MangaTitle,
+		}
+		statusCode = 200
+	}
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	c.JSON(statusCode, response)
+}
+
+// GetMyLibrary add manga to my library
+func GetMyLibrary(c *gin.Context) {
+	var response gin.H
+	var statusCode int
+
+	auth := c.Request.Header["Authorization"][0]
+	userData, err := sUser.DetailService(auth)
+	if err != nil {
+		response = gin.H{
+			"message": err.Error(),
+		}
+		statusCode = 400
+	}
+
+	if err == nil {
+		response = gin.H{
+			"my_libraries": userData.MyLibraries,
+		}
+		statusCode = 200
+	}
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	c.JSON(statusCode, response)
+}
+
 // SkipCors skip cors
 func SkipCors(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*")

@@ -94,3 +94,9 @@ func loginTokenDecoder(loginToken string) (string, error) {
 
 	return usernameStr, nil
 }
+
+func StoreMangaToMyLibrary(userData models.UserData, myLibrary models.MyLibrary) (string, error) {
+	rUser.SetMangaToMyLibrary(userData, myLibrary)
+
+	return "", nil
+}

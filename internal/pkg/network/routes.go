@@ -39,6 +39,10 @@ func RouterStart(port string) {
 	router.OPTIONS("/users/read_histories", cUser.SkipCors)
 	router.GET("/users/detail", cUser.GetDetailFirebase)
 	router.OPTIONS("/users/detail", cUser.SkipCors)
+	router.POST("/users/add_manga_library", cUser.AddToMyMangaLibrary)
+	router.OPTIONS("/users/add_manga_library", cUser.SkipCors)
+	router.GET("/users/manga_library", cUser.GetMyLibrary)
+	router.OPTIONS("/users/manga_library", cUser.SkipCors)
 
 	// users analytic
 	router.POST("/users/analytic_v1", cAnalytic.PostUserAnalyticV1)

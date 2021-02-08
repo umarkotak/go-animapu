@@ -54,3 +54,21 @@ func GetUserByUsernameFromFirebase(username string) models.UserData {
 
 	return userData
 }
+
+func SetMangaToMyLibrary(userData models.UserData, myLibrary models.MyLibrary) {
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+
+	ref := firebaseDB.NewRef("user_db")
+
+	if userData.Username == "" {
+		return
+	}
+
+	userRef := ref.Child(userData.Username)
+	myLibraryRef := userRef.Child("MyLibraries")
+	selectedMangaRef := myLibraryRef.Child(myLibrary.MangaTitle)
+	err := selectedMangaRef.Set(ctx, &myLibrary)
+	if err != nil {
+		log.Fatalln("Error set to database:", err)
+	}
+}
