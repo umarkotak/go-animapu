@@ -183,7 +183,7 @@ func AddToMyMangaLibrary(c *gin.Context) {
 	myLibrary.AveragePage = 100
 	myLibrary.NewAdded = 0
 	myLibrary.Status = "ongoing"
-	myLibrary.Weight = 1000
+	myLibrary.Weight = int(time.Now().Unix())
 	myLibrary.Finder = userData.Username
 
 	res, err := sUser.StoreMangaToMyLibrary(userData, myLibrary)
