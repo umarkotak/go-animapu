@@ -174,6 +174,7 @@ func GetTodaysMangaTitle() models.MangaDB {
 
 // GetTodaysMangaTitleV2 get manga titles
 func GetTodaysMangaTitleV2() models.MangaDB {
+	fmt.Println("INCODMING GetTodaysMangaTitleV2")
 	appCache := pkgAppCache.GetAppCache()
 
 	res, found := appCache.Get("mangahub_todays_manga")
@@ -250,6 +251,8 @@ func GetTodaysMangaTitleV2() models.MangaDB {
 	}
 
 	appCache.Set("mangahub_todays_manga", mangaDB, 5*time.Minute)
+	_, b := appCache.Get("mangahub_todays_manga")
+	fmt.Println("APP CACHE IS", b)
 
 	return mangaDB
 }
