@@ -2,6 +2,8 @@ package scrapper
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"regexp"
 	"strings"
 	"time"
@@ -35,6 +37,11 @@ func FetchAllAnime() map[string]string {
 	})
 
 	c.Visit("https://animepahe.com/anime")
+
+	resp, err := http.Get("https://animepahe.com/anime")
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	fmt.Println("NORMAL HTTP:", string(body), ", ERROR:", err)
 
 	appCache.Set("animepahe_map", animesMap, 50*time.Minute)
 	return animesMap
