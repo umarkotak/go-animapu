@@ -15,11 +15,11 @@ func FetchAllAnime() map[string]string {
 
 	appCache := pkgAppCache.GetAppCache()
 
-	res, found := appCache.Get("animepahe_map")
-	if found {
-		fmt.Println("FETCH FROM APP CACHE")
-		return res.(map[string]string)
-	}
+	// res, found := appCache.Get("animepahe_map")
+	// if found {
+	// 	fmt.Println("FETCH FROM APP CACHE")
+	// 	return res.(map[string]string)
+	// }
 
 	c := colly.NewCollector()
 
@@ -30,6 +30,7 @@ func FetchAllAnime() map[string]string {
 		sanitizedAnimeTitle := reg.ReplaceAllString(animeTitle, "")
 		animeLink = strings.ReplaceAll(animeLink, "/anime/", "")
 		animesMap[sanitizedAnimeTitle] = animeLink
+		fmt.Println("ANIME", animeLink)
 	})
 
 	c.Visit("https://animepahe.com/anime")
