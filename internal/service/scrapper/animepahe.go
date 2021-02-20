@@ -11,6 +11,7 @@ import (
 )
 
 func FetchAllAnime() map[string]string {
+	fmt.Println("INCOMING!!!")
 	animesMap := make(map[string]string)
 
 	appCache := pkgAppCache.GetAppCache()
