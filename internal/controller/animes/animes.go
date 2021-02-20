@@ -6,7 +6,7 @@ import (
 )
 
 func GetAnimesMap(c *gin.Context) {
-	result := sScrapper.FetchAllAnime()
+	result := sScrapper.FetchAllAnime(c)
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(200, result)
 }
