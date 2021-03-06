@@ -9,7 +9,6 @@ import (
 	rUser "github.com/umarkotak/go-animapu/internal/repository/user"
 	sManga "github.com/umarkotak/go-animapu/internal/service/manga"
 	sOnesignal "github.com/umarkotak/go-animapu/internal/service/onesignal"
-	"github.com/umarkotak/go-animapu/internal/service/scrapper"
 )
 
 var mangaDB models.MangaDB
@@ -21,7 +20,7 @@ func main() {
 
 	// mangaDB = rManga.GetMangaFromJSON()
 	// mangaDB = sManga.UpdateMangaChapters(mangaDB)
-	scrapper.FetchAllAnime()
+	// scrapper.FetchAllAnime()
 
 	fmt.Println("Thanks for using go-animapu CLI")
 }

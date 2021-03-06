@@ -1,7 +1,10 @@
 package scrapper
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"regexp"
 	"strings"
 	"time"
@@ -43,4 +46,25 @@ func FetchAllAnime(c *gin.Context) map[string]string {
 
 	appCache.Set("animepahe_map", animesMap, 50*time.Minute)
 	return animesMap
+}
+
+func SearchAnime(c *gin.Context) interface{} {
+	query := c.Request.URL.Query()
+
+	finalUrl := fmt.Sprintf("https://animepahe.com/api?m=search&l=8&q=%v", query["title"][0])
+
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", finalUrl, nil)
+	// req.Header = c.Request.Header
+	req.Header.Set("X-Forwarded-For", c.ClientIP())
+	resp, _ := client.Do(req)
+
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	stringBody := string(body)
+	fmt.Println("response", finalUrl, stringBody, " | ", req.Header)
+	var data map[string]interface{}
+	json.Unmarshal([]byte(stringBody), &data)
+
+	return data
 }

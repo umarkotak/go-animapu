@@ -55,6 +55,7 @@ func RouterStart(port string) {
 
 	// animepahe
 	router.GET("/animes_map", cAnimes.GetAnimesMap)
+	router.GET("/search_anime", cAnimes.GetSearchAnime)
 
 	hub := models.NewHub()
 	go hub.Run()
