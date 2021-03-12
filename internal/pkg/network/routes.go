@@ -3,7 +3,7 @@ package network
 import (
 	"github.com/gin-gonic/gin"
 
-	cPing "github.com/umarkotak/go-animapu/internal/controller"
+	baseController "github.com/umarkotak/go-animapu/internal/controller"
 	cAnalytic "github.com/umarkotak/go-animapu/internal/controller/analytic"
 	cAnimes "github.com/umarkotak/go-animapu/internal/controller/animes"
 	cChats "github.com/umarkotak/go-animapu/internal/controller/chats"
@@ -19,7 +19,7 @@ func RouterStart(port string) {
 	router := gin.New()
 	router.Use(gin.Logger())
 
-	router.GET("/ping", cPing.GetPing)
+	router.GET("/ping", baseController.GetPing)
 
 	// mangas
 	router.GET("/mangas", cManga.GetManga)
@@ -32,17 +32,19 @@ func RouterStart(port string) {
 
 	// users
 	router.POST("/users/register", cUser.RegisterUserFirebase)
-	router.OPTIONS("/users/register", cUser.SkipCors)
+	router.OPTIONS("/users/register", baseController.SkipCors)
 	router.POST("/users/login", cUser.LoginUser)
-	router.OPTIONS("/users/login", cUser.SkipCors)
+	router.OPTIONS("/users/login", baseController.SkipCors)
 	router.POST("/users/read_histories", cUser.LogReadHistories)
-	router.OPTIONS("/users/read_histories", cUser.SkipCors)
+	router.OPTIONS("/users/read_histories", baseController.SkipCors)
 	router.GET("/users/detail", cUser.GetDetailFirebase)
-	router.OPTIONS("/users/detail", cUser.SkipCors)
+	router.OPTIONS("/users/detail", baseController.SkipCors)
 	router.POST("/users/add_manga_library", cUser.AddToMyMangaLibrary)
-	router.OPTIONS("/users/add_manga_library", cUser.SkipCors)
+	router.OPTIONS("/users/add_manga_library", baseController.SkipCors)
 	router.GET("/users/manga_library", cUser.GetMyLibrary)
-	router.OPTIONS("/users/manga_library", cUser.SkipCors)
+	router.OPTIONS("/users/manga_library", baseController.SkipCors)
+	router.POST("/users/remove_manga_library", cUser.RemoveMyLibrary)
+	router.OPTIONS("/users/remove_manga_library", baseController.SkipCors)
 
 	// users analytic
 	router.POST("/users/analytic_v1", cAnalytic.PostUserAnalyticV1)
@@ -51,11 +53,13 @@ func RouterStart(port string) {
 	// clip
 	router.GET("/clips", cClips.GetClips)
 	router.POST("/clips", cClips.CreateClip)
-	router.OPTIONS("/clips", cUser.SkipCors)
+	router.OPTIONS("/clips", baseController.SkipCors)
 
 	// animepahe
 	router.GET("/animes_map", cAnimes.GetAnimesMap)
 	router.GET("/search_anime", cAnimes.GetSearchAnime)
+
+	// web sockets
 
 	hub := models.NewHub()
 	go hub.Run()

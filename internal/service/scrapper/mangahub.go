@@ -203,6 +203,7 @@ func GetTodaysMangaTitleV2() models.MangaDB {
 		}
 		sanitizedTitle := strings.Replace(choosenTitle, ".jpg", "", -1)
 		sanitizedTitle = strings.Replace(sanitizedTitle, ".png", "", -1)
+		sanitizedTitle = strings.Replace(sanitizedTitle, ".jpeg", "", -1)
 
 		textDesc := e.ChildText("li a span")
 		var choosenText string

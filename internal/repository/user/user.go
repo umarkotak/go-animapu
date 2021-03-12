@@ -72,3 +72,23 @@ func SetMangaToMyLibrary(userData models.UserData, myLibrary models.MyLibrary) {
 		log.Fatalln("Error set to database:", err)
 	}
 }
+
+func RemoveMangaFromMyLibrary(userData models.UserData, myLibrary models.MyLibrary) {
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+
+	ref := firebaseDB.NewRef("user_db")
+
+	if userData.Username == "" {
+		return
+	}
+
+	userRef := ref.Child(userData.Username)
+	myLibraryRef := userRef.Child("MyLibraries")
+
+	if myLibrary.MangaTitle == "" {
+		return
+	}
+
+	selectedMangaRef := myLibraryRef.Child(myLibrary.MangaTitle)
+	selectedMangaRef.Delete(ctx)
+}

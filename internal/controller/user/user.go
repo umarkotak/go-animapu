@@ -186,8 +186,7 @@ func AddToMyMangaLibrary(c *gin.Context) {
 	myLibrary.Weight = int(time.Now().Unix())
 	myLibrary.Finder = userData.Username
 
-	res, err := sUser.StoreMangaToMyLibrary(userData, myLibrary)
-	fmt.Println(res)
+	_, err = sUser.StoreMangaToMyLibrary(userData, myLibrary)
 
 	if err == nil {
 		response = gin.H{
@@ -229,10 +228,33 @@ func GetMyLibrary(c *gin.Context) {
 	c.JSON(statusCode, response)
 }
 
-// SkipCors skip cors
-func SkipCors(c *gin.Context) {
+func RemoveMyLibrary(c *gin.Context) {
+	var response gin.H
+	var statusCode int
+
+	auth := c.Request.Header["Authorization"][0]
+	userData, err := sUser.DetailService(auth)
+	if err != nil {
+		response = gin.H{
+			"message": err.Error(),
+		}
+		statusCode = 400
+	}
+
+	var myLibrary models.MyLibrary
+	c.BindJSON(&myLibrary)
+
+	_, err = sUser.RemoveMangaFromMyLibrary(userData, myLibrary)
+
+	if err == nil {
+		response = gin.H{
+			"added_title": myLibrary.MangaTitle,
+		}
+		statusCode = 200
+	}
+
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, "CORS OK")
+	c.JSON(statusCode, response)
 }

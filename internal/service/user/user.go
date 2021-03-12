@@ -100,3 +100,9 @@ func StoreMangaToMyLibrary(userData models.UserData, myLibrary models.MyLibrary)
 
 	return "", nil
 }
+
+func RemoveMangaFromMyLibrary(userData models.UserData, myLibrary models.MyLibrary) (string, error) {
+	rUser.RemoveMangaFromMyLibrary(userData, myLibrary)
+
+	return "", nil
+}
