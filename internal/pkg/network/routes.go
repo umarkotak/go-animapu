@@ -29,6 +29,7 @@ func RouterStart(port string) {
 	router.GET("/mangas/search_v1", cManga.GetMangaSearch)
 	router.GET("/mangas/todays_v1", cManga.GetMangaTodays)
 	router.GET("/mangas/statistics", cManga.GetMangaStatistics)
+	router.GET("/mangas/daily_manga_statistics", cManga.GetDailyMangaStatistics)
 
 	// users
 	router.POST("/users/register", cUser.RegisterUserFirebase)
@@ -48,7 +49,7 @@ func RouterStart(port string) {
 
 	// users analytic
 	router.POST("/users/analytic_v1", cAnalytic.PostUserAnalyticV1)
-	router.OPTIONS("/users/analytic_v1", cAnalytic.SkipCors)
+	router.OPTIONS("/users/analytic_v1", baseController.SkipCors)
 
 	// clip
 	router.GET("/clips", cClips.GetClips)

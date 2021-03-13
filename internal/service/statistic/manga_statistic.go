@@ -2,6 +2,7 @@ package statistic
 
 import (
 	"context"
+	"log"
 
 	"github.com/umarkotak/go-animapu/internal/models"
 	firebaseHelper "github.com/umarkotak/go-animapu/internal/pkg/firebase_helper"
@@ -48,4 +49,19 @@ func GenerateMangaStatistic() map[string]TempStatisticResult {
 	}
 
 	return tempStatisticFinalResult
+}
+
+// GenerateDailyMangaStatistic generate daily manga statistics
+func GenerateDailyMangaStatistic() map[string]models.AnalyticDailyMangaView {
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+
+	ref := firebaseDB.NewRef("")
+	analyticsRef := ref.Child("daily_manga_views_data")
+	analyticsDailyMangaViewRef := analyticsRef.Child("daily_manga_views_data_val")
+	var tempResult map[string]models.AnalyticDailyMangaView
+	if err := analyticsDailyMangaViewRef.Get(ctx, &tempResult); err != nil {
+		log.Fatalln("Error reading from database:", err)
+	}
+
+	return tempResult
 }

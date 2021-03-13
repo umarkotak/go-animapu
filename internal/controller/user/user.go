@@ -186,7 +186,7 @@ func AddToMyMangaLibrary(c *gin.Context) {
 	myLibrary.Weight = int(time.Now().Unix())
 	myLibrary.Finder = userData.Username
 
-	_, err = sUser.StoreMangaToMyLibrary(userData, myLibrary)
+	go sUser.StoreMangaToMyLibrary(userData, myLibrary)
 
 	if err == nil {
 		response = gin.H{
@@ -244,7 +244,7 @@ func RemoveMyLibrary(c *gin.Context) {
 	var myLibrary models.MyLibrary
 	c.BindJSON(&myLibrary)
 
-	_, err = sUser.RemoveMangaFromMyLibrary(userData, myLibrary)
+	go sUser.RemoveMangaFromMyLibrary(userData, myLibrary)
 
 	if err == nil {
 		response = gin.H{
