@@ -2,6 +2,7 @@ package manga
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"sort"
 	"strconv"
@@ -97,13 +98,15 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 
 	for _, mangaTitle := range keys {
 		wg.Add(1)
-		go checkMangaLatestChapter(&wg, mangaTitle, mangaDB, &updatedMangaTitles)
+		go checkMangaLatestChapter(&wg, mangaTitle, &mangaDB, &updatedMangaTitles)
 	}
+
+	wg.Wait()
 
 	if len(updatedMangaTitles) > 0 {
 		joinedString := strings.Join(updatedMangaTitles[:], ", ")
 		joinedString = strings.Replace(joinedString, "-", " ", -1)
-		fmt.Println("Updated titles: " + joinedString)
+		log.Println("Updated titles: " + joinedString)
 
 		sOnesignal.SendWebNotification("New chapter update!", joinedString)
 	}
@@ -113,7 +116,7 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 	return mangaDB
 }
 
-func checkMangaLatestChapter(wg *sync.WaitGroup, mangaTitle string, mangaDB models.MangaDB, updatedMangaTitles *[]string) {
+func checkMangaLatestChapter(wg *sync.WaitGroup, mangaTitle string, mangaDB *models.MangaDB, updatedMangaTitles *[]string) {
 	defer wg.Done()
 
 	mangaData := mangaDB.MangaDatas[mangaTitle]
@@ -121,7 +124,7 @@ func checkMangaLatestChapter(wg *sync.WaitGroup, mangaTitle string, mangaDB mode
 	mangaUpdatedChapter := mangaLatestChapter + 1
 
 	if mangaData.Status == "finished" {
-		fmt.Println(mangaTitle, " Finished!")
+		// fmt.Println(mangaTitle, " Finished!")
 		return
 	}
 
@@ -141,8 +144,8 @@ func checkMangaLatestChapter(wg *sync.WaitGroup, mangaTitle string, mangaDB mode
 		fmt.Println("[UPDATED]", mangaTitle, " From: ", mangaLatestChapter, " To: ", mangaUpdatedChapter)
 		*updatedMangaTitles = append(*updatedMangaTitles, mangaTitle)
 	} else {
+		// fmt.Println("[NO-UPDATE]", mangaTitle)
 		mangaData.NewAdded++
-		fmt.Println("[NO-UPDATE]", mangaTitle)
 	}
 	mangaDB.MangaDatas[mangaTitle] = mangaData
 }

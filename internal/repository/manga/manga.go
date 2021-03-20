@@ -104,5 +104,6 @@ func UpdateMangaToFireBase(mangaDB models.MangaDB) models.MangaDB {
 		log.Fatalln("Error setting value:", err)
 	}
 
+	log.Println("Successfully update firebase DB")
 	return mangaDB
 }
