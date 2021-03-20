@@ -75,7 +75,7 @@ func UpdateMangaChapters(mangaDB models.MangaDB) models.MangaDB {
 	return mangaDB
 }
 
-// UpdateMangaChaptersV2 fetch ;atest manga chapter from mangahub
+// UpdateMangaChaptersV2 fetch latest manga chapter from mangahub
 func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 	appCache := pkgAppCache.GetAppCache()
 

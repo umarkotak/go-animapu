@@ -80,6 +80,19 @@ func GetMangaFromFireBaseV2() models.MangaDB {
 	return mangaDB
 }
 
+// GetMangaFromFireBaseV2WithoutCache using direct struct
+func GetMangaFromFireBaseV2WithoutCache() models.MangaDB {
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+
+	ref := firebaseDB.NewRef("")
+	var mangaDB models.MangaDB
+	if err := ref.Get(ctx, &mangaDB); err != nil {
+		log.Fatalln("Error reading from database:", err)
+	}
+
+	return mangaDB
+}
+
 // UpdateMangaToFireBase update manga data to firebase
 func UpdateMangaToFireBase(mangaDB models.MangaDB) models.MangaDB {
 	firebaseDB := firebaseHelper.GetFirebaseDB()
