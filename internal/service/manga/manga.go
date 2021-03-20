@@ -77,13 +77,13 @@ func UpdateMangaChapters(mangaDB models.MangaDB) models.MangaDB {
 
 // UpdateMangaChaptersV2 fetch latest manga chapter from mangahub
 func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
-	appCache := pkgAppCache.GetAppCache()
+	// appCache := pkgAppCache.GetAppCache()
 
-	res, found := appCache.Get("update_manga_chapter")
-	if found {
-		fmt.Println("FETCH FROM APP CACHE")
-		return res.(models.MangaDB)
-	}
+	// res, found := appCache.Get("update_manga_chapter")
+	// if found {
+	// 	fmt.Println("FETCH FROM APP CACHE")
+	// 	return res.(models.MangaDB)
+	// }
 
 	var updatedMangaTitles []string
 	var keys []string
@@ -108,7 +108,7 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 		sOnesignal.SendWebNotification("New chapter update!", joinedString)
 	}
 
-	appCache.Set("update_manga_chapter", mangaDB, 5*time.Minute)
+	// appCache.Set("update_manga_chapter", mangaDB, 5*time.Minute)
 
 	return mangaDB
 }
