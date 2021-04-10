@@ -30,6 +30,7 @@ func RouterStart(port string) {
 	router.GET("/mangas/todays_v1", cManga.GetMangaTodays)
 	router.GET("/mangas/statistics", cManga.GetMangaStatistics)
 	router.GET("/mangas/daily_manga_statistics", cManga.GetDailyMangaStatistics)
+	router.GET("/mangas_detail", cManga.GetMangaDetail)
 
 	// users
 	router.POST("/users/register", cUser.RegisterUserFirebase)

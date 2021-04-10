@@ -257,3 +257,36 @@ func GetTodaysMangaTitleV2() models.MangaDB {
 
 	return mangaDB
 }
+
+// GetMangaDetailV1 get manga detail
+func GetMangaDetailV1(title string) models.MangaDetail {
+	mangaDetail := models.MangaDetail{}
+
+	url := fmt.Sprintf("https://mangahub.io/manga/%v", title)
+
+	c := colly.NewCollector()
+
+	c.OnHTML("ul.list-group li", func(e *colly.HTMLElement) {
+		rawChapter := e.ChildAttr("a", "href")
+		candidates := strings.Split(rawChapter, "-")
+		chapter := candidates[len(candidates)-1]
+
+		mangaDetail.Chapters = append(mangaDetail.Chapters, chapter)
+	})
+
+	tempGenres := []string{}
+	c.OnHTML(".label.genre-label", func(e *colly.HTMLElement) {
+		tempGenres = append(tempGenres, e.Text)
+	})
+
+	c.OnHTML(".img-responsive.manga-thumb", func(e *colly.HTMLElement) {
+		mangaDetail.ImageURL = e.Attr("src")
+	})
+
+	c.Visit(url)
+
+	mangaDetail.Title = title
+	mangaDetail.Genres += strings.Join(tempGenres, ", ")
+
+	return mangaDetail
+}
