@@ -111,3 +111,23 @@ func GetMangaDetail(c *gin.Context) {
 	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	c.JSON(200, result)
 }
+
+func GetMaidMyHome(c *gin.Context) {
+	result := sScrapper.ScrapMaidMyHomePage()
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	c.JSON(200, result)
+}
+
+func GetMaidMyMangaDetail(c *gin.Context) {
+	manga_title := c.Request.URL.Query().Get("manga_title")
+
+	result := sScrapper.ScrapMaidMyMangaDetailPage(manga_title)
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	c.JSON(200, result)
+}
