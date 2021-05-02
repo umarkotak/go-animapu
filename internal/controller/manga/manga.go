@@ -121,10 +121,33 @@ func GetMaidMyHome(c *gin.Context) {
 	c.JSON(200, result)
 }
 
+func GetMaidMySearch(c *gin.Context) {
+	query := c.Request.URL.Query().Get("query")
+
+	result := sScrapper.ScrapMaidMyMangaSearchPage(query)
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	c.JSON(200, result)
+}
+
 func GetMaidMyMangaDetail(c *gin.Context) {
 	manga_title := c.Request.URL.Query().Get("manga_title")
 
 	result := sScrapper.ScrapMaidMyMangaDetailPage(manga_title)
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	c.JSON(200, result)
+}
+
+func GetMaidMyMangaChapterDetail(c *gin.Context) {
+	manga_title := c.Request.URL.Query().Get("manga_chapter")
+	manga_chapter := c.Request.URL.Query().Get("manga_chapter")
+
+	result := sScrapper.ScrapMaidMyMangaChapterDetailPage(manga_title, manga_chapter)
 
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")

@@ -2,6 +2,7 @@ package scrapper
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -29,6 +30,7 @@ func ScrapMaidMyHomePage() models.MangaDB {
 			MangaLastChapter: 150,
 			AveragePage:      150,
 			ImageURL:         imageLink,
+			Status:           "ongoing",
 		}
 		mangaDatas[mangaTitle] = &tempMangaData
 	})
@@ -50,7 +52,40 @@ func ScrapMaidMyHomePage() models.MangaDB {
 }
 
 func ScrapMaidMyMangaSearchPage(query string) models.MangaDB {
-	mangaDB := models.MangaDB{}
+	c := colly.NewCollector()
+
+	mangaDatas := map[string]*models.MangaData{}
+
+	c.OnHTML(".flexbox2-content", func(e *colly.HTMLElement) {
+		imageLink := e.ChildAttr("img", "src")
+		mangaLink := e.ChildAttr("a", "href")
+		splittedLink := strings.Split(mangaLink, "/manga/")
+		mangaTitle := splittedLink[1]
+		mangaTitle = strings.ReplaceAll(mangaTitle, "/", "")
+		lastChapterS := e.ChildText(".season")
+		lastChapterSArr := strings.Split(lastChapterS, " ")
+		lastChapter := int64(150)
+		if len(lastChapterSArr) == 2 {
+			lastChapter, _ = strconv.ParseInt(lastChapterSArr[1], 10, 64)
+		}
+
+		fmt.Printf("%v", imageLink)
+
+		tempMangaData := models.MangaData{
+			CompactTitle:     mangaTitle,
+			MangaLastChapter: int(lastChapter),
+			AveragePage:      150,
+			ImageURL:         imageLink,
+			Status:           "ongoing",
+		}
+		mangaDatas[mangaTitle] = &tempMangaData
+	})
+
+	c.Visit(fmt.Sprintf("%v/?s=%v", maidMyHost, query))
+
+	mangaDB := models.MangaDB{
+		MangaDatas: mangaDatas,
+	}
 	return mangaDB
 }
 
@@ -109,5 +144,20 @@ func ScrapMaidMyMangaDetailPage(title string) models.MangaDetail {
 }
 
 func ScrapMaidMyMangaChapterDetailPage(title, chapter string) models.MangaChapterDetail {
-	return models.MangaChapterDetail{}
+	c := colly.NewCollector()
+
+	mangaChapterDetail := models.MangaChapterDetail{
+		Title: title,
+	}
+
+	fmt.Println(fmt.Sprintf("%v/%v/", maidMyHost, chapter))
+
+	c.OnHTML(".reader-area", func(e *colly.HTMLElement) {
+		imageUrls := e.ChildAttrs("img", "src")
+
+		mangaChapterDetail.Images = imageUrls
+	})
+
+	c.Visit(fmt.Sprintf("%v/%v/", maidMyHost, chapter))
+	return mangaChapterDetail
 }
