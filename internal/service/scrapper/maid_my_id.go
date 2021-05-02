@@ -39,17 +39,17 @@ func ScrapMaidMyHomePage() models.MangaDB {
 			Status:           "ongoing",
 			Weight:           weight,
 		}
-		mangaDatas[mangaTitle] = &tempMangaData
+
+		_, ok := mangaDatas[mangaTitle]
+		if !ok {
+			mangaDatas[mangaTitle] = &tempMangaData
+		}
 	})
 
 	c.Visit(fmt.Sprintf("%v/page/1/", maidMyHost))
-
 	c.Visit(fmt.Sprintf("%v/page/2/", maidMyHost))
-
 	c.Visit(fmt.Sprintf("%v/page/3/", maidMyHost))
-
 	c.Visit(fmt.Sprintf("%v/page/4/", maidMyHost))
-
 	c.Visit(fmt.Sprintf("%v/page/5/", maidMyHost))
 
 	mangaDB := models.MangaDB{
