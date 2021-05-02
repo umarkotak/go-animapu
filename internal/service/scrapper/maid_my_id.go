@@ -18,6 +18,9 @@ func ScrapMaidMyHomePage() models.MangaDB {
 
 	mangaDatas := map[string]*models.MangaData{}
 
+	maxWeight := 1000000
+	idx := 0
+
 	c.OnHTML(".flexbox3-content", func(e *colly.HTMLElement) {
 		imageLink := e.ChildAttr("img", "src")
 		mangaLink := e.ChildAttr("a", "href")
@@ -25,12 +28,16 @@ func ScrapMaidMyHomePage() models.MangaDB {
 		mangaTitle := splittedLink[1]
 		mangaTitle = strings.ReplaceAll(mangaTitle, "/", "")
 
+		weight := maxWeight - idx
+		idx += 1
+
 		tempMangaData := models.MangaData{
 			CompactTitle:     mangaTitle,
 			MangaLastChapter: 150,
 			AveragePage:      150,
 			ImageURL:         imageLink,
 			Status:           "ongoing",
+			Weight:           weight,
 		}
 		mangaDatas[mangaTitle] = &tempMangaData
 	})
@@ -56,6 +63,9 @@ func ScrapMaidMyMangaSearchPage(query string) models.MangaDB {
 
 	mangaDatas := map[string]*models.MangaData{}
 
+	maxWeight := 1000000
+	idx := 0
+
 	c.OnHTML(".flexbox2-content", func(e *colly.HTMLElement) {
 		imageLink := e.ChildAttr("img", "src")
 		mangaLink := e.ChildAttr("a", "href")
@@ -69,7 +79,8 @@ func ScrapMaidMyMangaSearchPage(query string) models.MangaDB {
 			lastChapter, _ = strconv.ParseInt(lastChapterSArr[1], 10, 64)
 		}
 
-		fmt.Printf("%v", imageLink)
+		weight := maxWeight - idx
+		idx += 1
 
 		tempMangaData := models.MangaData{
 			CompactTitle:     mangaTitle,
@@ -77,6 +88,7 @@ func ScrapMaidMyMangaSearchPage(query string) models.MangaDB {
 			AveragePage:      150,
 			ImageURL:         imageLink,
 			Status:           "ongoing",
+			Weight:           weight,
 		}
 		mangaDatas[mangaTitle] = &tempMangaData
 	})
