@@ -3,6 +3,7 @@ package manga
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -104,6 +105,26 @@ func UpdateMangaToFireBase(mangaDB models.MangaDB) models.MangaDB {
 		log.Fatalln("Error setting value:", err)
 	}
 
-	log.Println("Successfully update firebase DB")
 	return mangaDB
+}
+
+func AddMangaToFireBaseGeneralLibrary(mangaData models.MangaData) (models.MangaData, error) {
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+	rootRef := firebaseDB.NewRef("")
+	mangaDBRef := rootRef.Child("manga_db")
+
+	dataRef := mangaDBRef.Child(mangaData.Title)
+
+	var tempData models.MangaData
+	dataRef.Get(ctx, &tempData)
+	if tempData.MangaLastChapter != 0 {
+		return tempData, errors.New("already_exists")
+	}
+
+	err := dataRef.Set(ctx, mangaData)
+	if err != nil {
+		log.Fatalln("Error setting value:", err)
+	}
+
+	return mangaData, nil
 }

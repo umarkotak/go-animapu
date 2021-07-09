@@ -2,6 +2,7 @@ package models
 
 // MangaData Detail of certain manga
 type MangaData struct {
+	Title            string `json:"title"`
 	CompactTitle     string `json:"compact_title"`
 	MangaLastChapter int    `json:"manga_last_chapter"`
 	AveragePage      int    `json:"average_page"`

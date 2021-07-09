@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/umarkotak/go-animapu/internal/models"
 	rManga "github.com/umarkotak/go-animapu/internal/repository/manga"
 	sManga "github.com/umarkotak/go-animapu/internal/service/manga"
 	sScrapper "github.com/umarkotak/go-animapu/internal/service/scrapper"
@@ -153,4 +154,25 @@ func GetMaidMyMangaChapterDetail(c *gin.Context) {
 	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	c.JSON(200, result)
+}
+
+func PostAddToGeneralMangaLibrary(c *gin.Context) {
+	mangaData := models.MangaData{
+		Title:            "",
+		CompactTitle:     "",
+		MangaLastChapter: 0,
+		AveragePage:      100,
+		Status:           "ongoing",
+		ImageURL:         "",
+		NewAdded:         1,
+		Weight:           10000,
+		Finder:           "EXTERNAL",
+	}
+	c.BindJSON(&mangaData)
+	mangaData, _ = rManga.AddMangaToFireBaseGeneralLibrary(mangaData)
+
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	c.JSON(200, mangaData)
 }
