@@ -11,7 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gocolly/colly"
-	pkgAppCache "github.com/umarkotak/go-animapu/internal/pkg/app_cache"
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/lib/app_cache"
 )
 
 func FetchAllAnime(c *gin.Context) map[string]string {

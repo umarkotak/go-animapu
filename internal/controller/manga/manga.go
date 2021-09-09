@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
+	appCache "github.com/umarkotak/go-animapu/internal/lib/app_cache"
 	"github.com/umarkotak/go-animapu/internal/models"
 	rManga "github.com/umarkotak/go-animapu/internal/repository/manga"
 	sManga "github.com/umarkotak/go-animapu/internal/service/manga"
@@ -52,11 +54,17 @@ func GetMangaFirebase(c *gin.Context) {
 
 // UpdateMangaFirebase update mangat to firebase
 func UpdateMangaFirebase(c *gin.Context) {
+	updated, _ := appCache.GetAppCache().Get("UPDATED_MANGA_CACHE")
+
 	// mangaDB := rManga.GetMangaFromFireBaseV2()
 	mangaDB := rManga.GetMangaFromFireBaseV2WithoutCache()
 	// mangaDB = sManga.UpdateMangaChapters(mangaDB)
-	mangaDB = sManga.UpdateMangaChaptersV2(mangaDB)
-	go rManga.UpdateMangaToFireBase(mangaDB)
+	if updated == nil {
+		fmt.Println("DIRECT UPDATE")
+		mangaDB = sManga.UpdateMangaChaptersV2(mangaDB)
+		go rManga.UpdateMangaToFireBase(mangaDB)
+		appCache.GetAppCache().Set("UPDATED_MANGA_CACHE", "UPDATED", 1*time.Minute)
+	}
 
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(200, mangaDB)

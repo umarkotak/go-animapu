@@ -3,8 +3,8 @@ package clips
 import (
 	"context"
 
+	firebaseHelper "github.com/umarkotak/go-animapu/internal/lib/firebase_helper"
 	"github.com/umarkotak/go-animapu/internal/models"
-	firebaseHelper "github.com/umarkotak/go-animapu/internal/pkg/firebase_helper"
 )
 
 var ctx = context.Background()

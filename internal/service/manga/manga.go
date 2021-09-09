@@ -2,7 +2,6 @@ package manga
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"sort"
 	"strconv"
@@ -10,9 +9,10 @@ import (
 	"sync"
 	"time"
 
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/lib/app_cache"
 	"github.com/umarkotak/go-animapu/internal/models"
-	pkgAppCache "github.com/umarkotak/go-animapu/internal/pkg/app_cache"
 	sOnesignal "github.com/umarkotak/go-animapu/internal/service/onesignal"
+	"github.com/umarkotak/go-animapu/internal/service/scrapper"
 )
 
 var mangaHubCDN = "https://img.mghubcdn.com/file/imghub"
@@ -98,18 +98,18 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 
 	for _, mangaTitle := range keys {
 		wg.Add(1)
-		go checkMangaLatestChapter(&wg, mangaTitle, &mangaDB, &updatedMangaTitles)
+		go checkMangaLatestChapterV2(&wg, mangaTitle, &mangaDB, &updatedMangaTitles)
 	}
 
 	wg.Wait()
 
-	if len(updatedMangaTitles) > 0 {
-		joinedString := strings.Join(updatedMangaTitles[:], ", ")
-		joinedString = strings.Replace(joinedString, "-", " ", -1)
-		log.Println("Updated titles: " + joinedString)
+	// if len(updatedMangaTitles) > 0 {
+	// 	joinedString := strings.Join(updatedMangaTitles[:], ", ")
+	// 	joinedString = strings.Replace(joinedString, "-", " ", -1)
+	// 	log.Println("Updated titles: " + joinedString)
 
-		sOnesignal.SendWebNotification("New chapter update!", joinedString)
-	}
+	// 	sOnesignal.SendWebNotification("New chapter update!", joinedString)
+	// }
 
 	// appCache.Set("update_manga_chapter", mangaDB, 5*time.Minute)
 
@@ -133,19 +133,60 @@ func checkMangaLatestChapter(wg *sync.WaitGroup, mangaTitle string, mangaDB *mod
 	targetPathPNG := mangaHubCDN + "/" + mangaTitle + "/" + strconv.Itoa(mangaUpdatedChapter) + "/1.png"
 	targetPathJPEG := mangaHubCDN + "/" + mangaTitle + "/" + strconv.Itoa(mangaUpdatedChapter) + "/5.jpeg"
 
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", targetPathJPG, nil)
+	req.Header.Add("authority", `img.mghubcdn.com`)
+	resp, _ := client.Do(req)
+	fmt.Println(targetPathJPG, resp.Status)
+
 	resultJpg, _ := http.Get(targetPathJPG)
 	resultJpg2, _ := http.Get(targetPathJPG2)
 	resultPng, _ := http.Get(targetPathPNG)
 	resultJpeg, _ := http.Get(targetPathJPEG)
 
+	// fmt.Println(targetPathJPG)
 	if resultJpg.Status == "200 OK" || resultPng.Status == "200 OK" || resultJpeg.Status == "200 OK" || resultJpg2.Status == "200 OK" {
 		mangaData.MangaLastChapter = mangaUpdatedChapter
 		mangaData.NewAdded = 1
 		fmt.Println("[UPDATED]", mangaTitle, " From: ", mangaLatestChapter, " To: ", mangaUpdatedChapter)
 		*updatedMangaTitles = append(*updatedMangaTitles, mangaTitle)
 	} else {
-		// fmt.Println("[NO-UPDATE]", mangaTitle)
+		// fmt.Println("[NO-UPDATE]", mangaTitle, resultJpg.Status, resultPng.Status, resultJpeg.Status, resultJpg2.Status)
 		mangaData.NewAdded++
 	}
+	fmt.Println()
+	mangaDB.MangaDatas[mangaTitle] = mangaData
+}
+
+func checkMangaLatestChapterV2(wg *sync.WaitGroup, mangaTitle string, mangaDB *models.MangaDB, updatedMangaTitles *[]string) {
+	defer wg.Done()
+
+	mangaData := mangaDB.MangaDatas[mangaTitle]
+
+	if mangaData.Status == "finished" {
+		return
+	}
+
+	mangaDetail := scrapper.GetMangaDetailV1(mangaTitle)
+
+	if len(mangaDetail.Chapters) == 0 {
+		return
+	}
+
+	lastChapter, err := strconv.ParseFloat(mangaDetail.Chapters[0], 32)
+	if err != nil || lastChapter <= 0 {
+		return
+	}
+
+	lastChapterRounded := int(lastChapter)
+
+	if lastChapterRounded <= mangaData.MangaLastChapter {
+		mangaData.NewAdded++
+		return
+	}
+
+	mangaData.MangaLastChapter = lastChapterRounded
+	mangaData.NewAdded = 1
+
 	mangaDB.MangaDatas[mangaTitle] = mangaData
 }

@@ -10,9 +10,9 @@ import (
 	"os"
 	"time"
 
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/lib/app_cache"
+	firebaseHelper "github.com/umarkotak/go-animapu/internal/lib/firebase_helper"
 	"github.com/umarkotak/go-animapu/internal/models"
-	pkgAppCache "github.com/umarkotak/go-animapu/internal/pkg/app_cache"
-	firebaseHelper "github.com/umarkotak/go-animapu/internal/pkg/firebase_helper"
 )
 
 var mangaDbFilePath = "data/mangas.json"

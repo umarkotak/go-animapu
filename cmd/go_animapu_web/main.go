@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
-	pkgAppCache "github.com/umarkotak/go-animapu/internal/pkg/app_cache"
-	"github.com/umarkotak/go-animapu/internal/pkg/network"
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/lib/app_cache"
+	"github.com/umarkotak/go-animapu/internal/lib/network"
 )
 
 func main() {
@@ -18,7 +17,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Fatal("$PORT must be set")
+		port = "4000"
 	}
 
 	network.RouterStart(port)
