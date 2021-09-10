@@ -12,6 +12,7 @@ import (
 	cChats "github.com/umarkotak/go-animapu/internal/controller/chats"
 	cClips "github.com/umarkotak/go-animapu/internal/controller/clips"
 	cManga "github.com/umarkotak/go-animapu/internal/controller/manga"
+	cMangadex "github.com/umarkotak/go-animapu/internal/controller/mangadex"
 	cSocketGame "github.com/umarkotak/go-animapu/internal/controller/socket_game"
 	cUser "github.com/umarkotak/go-animapu/internal/controller/user"
 	"github.com/umarkotak/go-animapu/internal/models"
@@ -60,6 +61,9 @@ func RouterStart(port string) {
 	// animepahe
 	router.GET("/animes_map", cAnimes.GetAnimesMap)
 	router.GET("/search_anime", cAnimes.GetSearchAnime)
+
+	// mangadex proxy
+	router.GET("/mangadex/*mangadex_path", cMangadex.GetProxy)
 
 	// web sockets
 
