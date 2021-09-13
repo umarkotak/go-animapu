@@ -33,7 +33,7 @@ run_web:
 	echo "Web is running"
 
 run_web_raw:
-	PORT=3005 go run cmd/go_animapu_web/main.go
+	go run cmd/go_animapu_web/main.go
 
 vendorize:
 	go mod vendor
