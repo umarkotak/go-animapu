@@ -85,6 +85,7 @@ func Start() {
 
 	// mangaupdates scrapper
 	// /mangaupdates/releases only -> https://www.mangaupdates.com/releases.html
+	router.GET("/mangaupdates/releases", cMangaupdates.GetReleases)
 	// /mangaupdates/search -> https://www.mangaupdates.com/search.html?search=naruto
 	// /mangaupdates/series -> https://www.mangaupdates.com/series.html?id=19230
 	router.GET("/mangaupdates/series", cMangaupdates.GetSeries)

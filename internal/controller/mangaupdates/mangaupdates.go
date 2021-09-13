@@ -15,3 +15,12 @@ func GetSeries(c *gin.Context) {
 
 	http_req.RenderResponse(c, 200, result)
 }
+
+func GetReleases(c *gin.Context) {
+	mangaDB, err := scrapper.GetReleases()
+	if err != nil {
+		http_req.RenderResponse(c, 422, err)
+	}
+
+	http_req.RenderResponse(c, 200, mangaDB)
+}
