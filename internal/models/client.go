@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	firebaseHelper "github.com/umarkotak/go-animapu/internal/lib/firebase_helper"
+	firebaseHelper "github.com/umarkotak/go-animapu/internal/utils/firebase_helper"
 )
 
 const (

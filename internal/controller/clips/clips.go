@@ -7,15 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/umarkotak/go-animapu/internal/models"
 	rClips "github.com/umarkotak/go-animapu/internal/repository/clips"
+	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
 
 func GetClips(c *gin.Context) {
 	clips := rClips.GetClipsFromFirebase()
-
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, clips)
+	http_req.RenderResponse(c, 200, clips)
 }
 
 func CreateClip(c *gin.Context) {
@@ -32,9 +29,5 @@ func CreateClip(c *gin.Context) {
 		TimestampUtc:  time.Now().Format("2006-01-02T15:04:05Z07:00"),
 	}
 	rClips.CreateClipsToFirebase(clip)
-
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, clip)
+	http_req.RenderResponse(c, 200, clip)
 }

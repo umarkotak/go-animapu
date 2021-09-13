@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gocolly/colly"
-	pkgAppCache "github.com/umarkotak/go-animapu/internal/lib/app_cache"
 	"github.com/umarkotak/go-animapu/internal/models"
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
 )
 
 // SearchMangaTitle from mangahub search page

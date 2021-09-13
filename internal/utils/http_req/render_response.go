@@ -1,4 +1,4 @@
-package utils
+package http_req
 
 import (
 	"github.com/gin-gonic/gin"

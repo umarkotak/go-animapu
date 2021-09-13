@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	sAnalytic "github.com/umarkotak/go-animapu/internal/service/analytic"
+	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
 
 func PostUserAnalyticV1(c *gin.Context) {
@@ -23,10 +24,7 @@ func PostUserAnalyticV1(c *gin.Context) {
 
 	go sAnalytic.LogDailyMangaView(requestParams.MangaTitle, requestParams.MangaPage, requestParams.UserIP)
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, "OK")
+	http_req.RenderResponse(c, 200, "OK")
 }
 
 func sanitizeClientIP(clientIP string) string {

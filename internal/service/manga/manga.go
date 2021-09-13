@@ -9,10 +9,10 @@ import (
 	"sync"
 	"time"
 
-	pkgAppCache "github.com/umarkotak/go-animapu/internal/lib/app_cache"
 	"github.com/umarkotak/go-animapu/internal/models"
 	sOnesignal "github.com/umarkotak/go-animapu/internal/service/onesignal"
 	"github.com/umarkotak/go-animapu/internal/service/scrapper"
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
 )
 
 var mangaHubCDN = "https://img.mghubcdn.com/file/imghub"

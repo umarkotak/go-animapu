@@ -11,4 +11,6 @@ type MangaData struct {
 	NewAdded         int    `json:"new_added"`
 	Weight           int    `json:"weight"`
 	Finder           string `json:"finder"`
+	MangadexID       string `json:"mangadex_id"`
+	MangaUpdatesID   string `json:"manga_updates_id"`
 }

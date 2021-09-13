@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/umarkotak/go-animapu/internal/lib/utils"
+	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
 
 func GetProxy(c *gin.Context) {
@@ -18,7 +18,7 @@ func GetProxy(c *gin.Context) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", mangadexFullpath, nil)
 	if err != nil {
-		utils.RenderResponse(c, 422, fmt.Sprintf("error: %v", err))
+		http_req.RenderResponse(c, 422, fmt.Sprintf("error: %v", err))
 	}
 	req.Header.Add("Authorization", c.Request.Header["Authorization"][0])
 
@@ -28,8 +28,8 @@ func GetProxy(c *gin.Context) {
 	var responseBody interface{}
 	err = json.Unmarshal(bodyBytes, &responseBody)
 	if err != nil {
-		utils.RenderResponse(c, 422, fmt.Sprintf("error: %v", err))
+		http_req.RenderResponse(c, 422, fmt.Sprintf("error: %v", err))
 	}
 
-	utils.RenderResponse(c, 200, responseBody)
+	http_req.RenderResponse(c, 200, responseBody)
 }

@@ -9,12 +9,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	appCache "github.com/umarkotak/go-animapu/internal/lib/app_cache"
 	"github.com/umarkotak/go-animapu/internal/models"
 	rManga "github.com/umarkotak/go-animapu/internal/repository/manga"
 	sManga "github.com/umarkotak/go-animapu/internal/service/manga"
 	sScrapper "github.com/umarkotak/go-animapu/internal/service/scrapper"
 	sStatistic "github.com/umarkotak/go-animapu/internal/service/statistic"
+	appCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
+	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
 
 // GetManga get list of all manga in DB
@@ -29,8 +30,7 @@ func GetManga(c *gin.Context) {
 	var result map[string]interface{}
 	json.Unmarshal([]byte(byteValue), &result)
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.JSON(200, result)
+	http_req.RenderResponse(c, 200, result)
 }
 
 // UpdateManga run update manga
@@ -39,8 +39,7 @@ func UpdateManga(c *gin.Context) {
 	mangaDB = sManga.UpdateMangaChapters(mangaDB)
 	mangaDB = rManga.UpdateMangaToJSON(mangaDB)
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.JSON(200, mangaDB)
+	http_req.RenderResponse(c, 200, mangaDB)
 }
 
 // GetMangaFirebase get manga from firebase
@@ -48,8 +47,7 @@ func GetMangaFirebase(c *gin.Context) {
 	// mangaDB := rManga.GetMangaFromFireBaseV2()
 	mangaDB := rManga.GetMangaFromFireBaseV2WithoutCache()
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.JSON(200, mangaDB)
+	http_req.RenderResponse(c, 200, mangaDB)
 }
 
 // UpdateMangaFirebase update mangat to firebase
@@ -66,8 +64,7 @@ func UpdateMangaFirebase(c *gin.Context) {
 		appCache.GetAppCache().Set("UPDATED_MANGA_CACHE", "UPDATED", 1*time.Minute)
 	}
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.JSON(200, mangaDB)
+	http_req.RenderResponse(c, 200, mangaDB)
 }
 
 // GetMangaSearch search manga title
@@ -76,38 +73,26 @@ func GetMangaSearch(c *gin.Context) {
 
 	mangaDB := sScrapper.SearchMangaTitle(title)
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, mangaDB)
+	http_req.RenderResponse(c, 200, mangaDB)
 }
 
 // GetMangaTodays list of todays manga
 func GetMangaTodays(c *gin.Context) {
 	mangaDB := sScrapper.GetTodaysMangaTitleV2()
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, mangaDB)
+	http_req.RenderResponse(c, 200, mangaDB)
 }
 
 func GetMangaStatistics(c *gin.Context) {
 	result := sStatistic.GenerateMangaStatistic()
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, result)
+	http_req.RenderResponse(c, 200, result)
 }
 
 func GetDailyMangaStatistics(c *gin.Context) {
 	result := sStatistic.GenerateDailyMangaStatistic()
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, result)
+	http_req.RenderResponse(c, 200, result)
 }
 
 func GetMangaDetail(c *gin.Context) {
@@ -115,19 +100,13 @@ func GetMangaDetail(c *gin.Context) {
 
 	result := sScrapper.GetMangaDetailV1(manga_title)
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, result)
+	http_req.RenderResponse(c, 200, result)
 }
 
 func GetMaidMyHome(c *gin.Context) {
 	result := sScrapper.ScrapMaidMyHomePage()
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, result)
+	http_req.RenderResponse(c, 200, result)
 }
 
 func GetMaidMySearch(c *gin.Context) {
@@ -135,10 +114,7 @@ func GetMaidMySearch(c *gin.Context) {
 
 	result := sScrapper.ScrapMaidMyMangaSearchPage(query)
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, result)
+	http_req.RenderResponse(c, 200, result)
 }
 
 func GetMaidMyMangaDetail(c *gin.Context) {
@@ -146,10 +122,7 @@ func GetMaidMyMangaDetail(c *gin.Context) {
 
 	result := sScrapper.ScrapMaidMyMangaDetailPage(manga_title)
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, result)
+	http_req.RenderResponse(c, 200, result)
 }
 
 func GetMaidMyMangaChapterDetail(c *gin.Context) {
@@ -158,10 +131,7 @@ func GetMaidMyMangaChapterDetail(c *gin.Context) {
 
 	result := sScrapper.ScrapMaidMyMangaChapterDetailPage(manga_title, manga_chapter)
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, result)
+	http_req.RenderResponse(c, 200, result)
 }
 
 func PostAddToGeneralMangaLibrary(c *gin.Context) {
@@ -179,8 +149,5 @@ func PostAddToGeneralMangaLibrary(c *gin.Context) {
 	c.BindJSON(&mangaData)
 	mangaData, _ = rManga.AddMangaToFireBaseGeneralLibrary(mangaData)
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(200, mangaData)
+	http_req.RenderResponse(c, 200, mangaData)
 }

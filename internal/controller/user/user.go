@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/umarkotak/go-animapu/internal/models"
 	sUser "github.com/umarkotak/go-animapu/internal/service/user"
+	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
 
 // RegisterUserFirebase get list of all manga in DB
@@ -41,10 +42,8 @@ func RegisterUserFirebase(c *gin.Context) {
 		}
 		statusCode = 200
 	}
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(statusCode, response)
+
+	http_req.RenderResponse(c, statusCode, response)
 }
 
 // LoginUser run update manga
@@ -78,10 +77,8 @@ func LoginUser(c *gin.Context) {
 		}
 		statusCode = 200
 	}
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(statusCode, response)
+
+	http_req.RenderResponse(c, statusCode, response)
 }
 
 // GetDetailFirebase get manga from firebase
@@ -104,10 +101,8 @@ func GetDetailFirebase(c *gin.Context) {
 		}
 		statusCode = 200
 	}
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(statusCode, response)
+
+	http_req.RenderResponse(c, statusCode, response)
 }
 
 // LogReadHistories update user last read histories
@@ -125,10 +120,13 @@ func LogReadHistories(c *gin.Context) {
 	now := time.Now().In(loc)
 	lastChapter, _ := strconv.Atoi(json.LastChapter)
 	readHistory := models.ReadHistory{
-		MangaTitle:    json.MangaTitle,
-		LastChapter:   lastChapter,
-		LastReadTime:  now.Format(time.RFC3339),
-		LastReadTimeI: now.Unix(),
+		MangaTitle:     json.MangaTitle,
+		LastChapter:    lastChapter,
+		LastReadTime:   now.Format(time.RFC3339),
+		LastReadTimeI:  now.Unix(),
+		MangadexID:     "",
+		MangaUpdatesID: "",
+		MangaSource:    "",
 	}
 
 	userData, err := sUser.DetailService(auth)
@@ -157,10 +155,8 @@ func LogReadHistories(c *gin.Context) {
 		}
 		statusCode = 200
 	}
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(statusCode, response)
+
+	http_req.RenderResponse(c, statusCode, response)
 }
 
 // AddToMyMangaLibrary add manga to my library
@@ -195,10 +191,7 @@ func AddToMyMangaLibrary(c *gin.Context) {
 		statusCode = 200
 	}
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(statusCode, response)
+	http_req.RenderResponse(c, statusCode, response)
 }
 
 // GetMyLibrary add manga to my library
@@ -222,10 +215,7 @@ func GetMyLibrary(c *gin.Context) {
 		statusCode = 200
 	}
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(statusCode, response)
+	http_req.RenderResponse(c, statusCode, response)
 }
 
 func RemoveMyLibrary(c *gin.Context) {
@@ -253,8 +243,5 @@ func RemoveMyLibrary(c *gin.Context) {
 		statusCode = 200
 	}
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(statusCode, response)
+	http_req.RenderResponse(c, statusCode, response)
 }

@@ -1,10 +1,12 @@
-package network
+package app
 
 import (
 	"fmt"
+	"os"
 
 	nice "github.com/ekyoung/gin-nice-recovery"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 
 	baseController "github.com/umarkotak/go-animapu/internal/controller"
 	cAnalytic "github.com/umarkotak/go-animapu/internal/controller/analytic"
@@ -16,10 +18,25 @@ import (
 	cSocketGame "github.com/umarkotak/go-animapu/internal/controller/socket_game"
 	cUser "github.com/umarkotak/go-animapu/internal/controller/user"
 	"github.com/umarkotak/go-animapu/internal/models"
+	pkgAppCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
 )
 
-// RouterStart this is entry porint for all http request to go-animapu web
-func RouterStart(port string) {
+var (
+	port string
+)
+
+func Init() {
+	godotenv.Load(".env")
+	pkgAppCache.InitAppCache()
+
+	port = os.Getenv("PORT")
+	if port == "" {
+		port = "4000"
+	}
+}
+
+// Start this is entry porint for all http request to go-animapu web
+func Start() {
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.Use(nice.Recovery(recoveryHandler))
