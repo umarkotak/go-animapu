@@ -15,6 +15,7 @@ import (
 	cClips "github.com/umarkotak/go-animapu/internal/controller/clips"
 	cManga "github.com/umarkotak/go-animapu/internal/controller/manga"
 	cMangadex "github.com/umarkotak/go-animapu/internal/controller/mangadex"
+	cMangaupdates "github.com/umarkotak/go-animapu/internal/controller/mangaupdates"
 	cSocketGame "github.com/umarkotak/go-animapu/internal/controller/socket_game"
 	cUser "github.com/umarkotak/go-animapu/internal/controller/user"
 	"github.com/umarkotak/go-animapu/internal/models"
@@ -81,6 +82,13 @@ func Start() {
 
 	// mangadex proxy
 	router.GET("/mangadex/*mangadex_path", cMangadex.GetProxy)
+
+	// mangaupdates scrapper
+	// /mangaupdates/releases only -> https://www.mangaupdates.com/releases.html
+	// /mangaupdates/search -> https://www.mangaupdates.com/search.html?search=naruto
+	// /mangaupdates/series -> https://www.mangaupdates.com/series.html?id=19230
+	router.GET("/mangaupdates/series", cMangaupdates.GetSeries)
+	// /mangaupdates/releases with query -> https://www.mangaupdates.com/releases.html?stype=series&search=19230&page=1&perpage=100&orderby=chap&asc=desc
 
 	// web sockets
 
