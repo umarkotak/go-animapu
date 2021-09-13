@@ -15,7 +15,10 @@ import (
 	pkgAppCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
 )
 
-var mangaHubCDN = "https://img.mghubcdn.com/file/imghub"
+var (
+	mangaHubCDN  = "https://img.mghubcdn.com/file/imghub"
+	mangaDBMutex = sync.RWMutex{}
+)
 
 // UpdateMangaChapters fetch ;atest manga chapter from mangahub
 func UpdateMangaChapters(mangaDB models.MangaDB) models.MangaDB {
@@ -86,6 +89,8 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 	// 	return res.(models.MangaDB)
 	// }
 
+	tempMangaDB := mangaDB
+
 	var updatedMangaTitles []string
 	var keys []string
 	for k := range mangaDB.MangaDatas {
@@ -98,7 +103,7 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 
 	for _, mangaTitle := range keys {
 		wg.Add(1)
-		go checkMangaLatestChapterV2(&wg, mangaTitle, &mangaDB, &updatedMangaTitles)
+		go checkMangaLatestChapterV2(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
 	}
 
 	wg.Wait()
@@ -113,7 +118,7 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 
 	// appCache.Set("update_manga_chapter", mangaDB, 5*time.Minute)
 
-	return mangaDB
+	return tempMangaDB
 }
 
 func checkMangaLatestChapter(wg *sync.WaitGroup, mangaTitle string, mangaDB *models.MangaDB, updatedMangaTitles *[]string) {
@@ -161,7 +166,16 @@ func checkMangaLatestChapter(wg *sync.WaitGroup, mangaTitle string, mangaDB *mod
 func checkMangaLatestChapterV2(wg *sync.WaitGroup, mangaTitle string, mangaDB *models.MangaDB, updatedMangaTitles *[]string) {
 	defer wg.Done()
 
+	mangaDBMutex.RLock()
 	mangaData := mangaDB.MangaDatas[mangaTitle]
+	mangaDBMutex.RUnlock()
+
+	mangaData.Title = mangaTitle
+	mangaData.CompactTitle = strings.Replace(mangaTitle, "-", " ", -1)
+
+	mangaDBMutex.Lock()
+	mangaDB.MangaDatas[mangaTitle] = mangaData
+	mangaDBMutex.Unlock()
 
 	if mangaData.Status == "finished" {
 		return
@@ -188,5 +202,7 @@ func checkMangaLatestChapterV2(wg *sync.WaitGroup, mangaTitle string, mangaDB *m
 	mangaData.MangaLastChapter = lastChapterRounded
 	mangaData.NewAdded = 1
 
+	mangaDBMutex.Lock()
 	mangaDB.MangaDatas[mangaTitle] = mangaData
+	mangaDBMutex.Unlock()
 }
