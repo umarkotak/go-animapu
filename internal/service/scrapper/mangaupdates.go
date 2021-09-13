@@ -55,10 +55,13 @@ func GetReleases() (models.MangaDB, error) {
 		if e.Attr("class") == "col-2 pl-1 pbreak" {
 			mangahubTitle := strings.ToLower(prevTitle)
 			mangahubTitle = strings.Replace(mangahubTitle, "%", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, "'", "", -1)
+			mangahubTitle = strings.Replace(mangahubTitle, "'", "-", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, "?", "", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, ".", "", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, "&", "", -1)
+			mangahubTitle = strings.Replace(mangahubTitle, "(", "", -1)
+			mangahubTitle = strings.Replace(mangahubTitle, ")", "", -1)
+			mangahubTitle = strings.Replace(mangahubTitle, "-", "", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, "  ", "-", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, " ", "-", -1)
 
@@ -68,6 +71,11 @@ func GetReleases() (models.MangaDB, error) {
 				mangaLastChapterString = mangaLastChapters[len(mangaLastChapters)-1]
 			} else {
 				mangaLastChapterString = ""
+			}
+
+			mangaLastChapterBreaked := strings.Split(mangaLastChapterString, "-")
+			if len(mangaLastChapterBreaked) > 0 {
+				mangaLastChapterString = mangaLastChapterBreaked[len(mangaLastChapterBreaked)-1]
 			}
 
 			var mangaLastChapter int64
