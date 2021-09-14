@@ -20,6 +20,7 @@ import (
 	cUser "github.com/umarkotak/go-animapu/internal/controller/user"
 	"github.com/umarkotak/go-animapu/internal/models"
 	pkgAppCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
+	firebaseHelper "github.com/umarkotak/go-animapu/internal/utils/firebase_helper"
 	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
 
@@ -30,6 +31,8 @@ var (
 func Init() {
 	godotenv.Load(".env")
 	pkgAppCache.InitAppCache()
+
+	firebaseHelper.GetFirebaseApp()
 
 	port = os.Getenv("PORT")
 	if port == "" {

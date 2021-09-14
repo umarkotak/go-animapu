@@ -10,10 +10,17 @@ import (
 	"google.golang.org/api/option"
 )
 
-var ctx = context.Background()
+var (
+	ctx         = context.Background()
+	firebaseApp *firebase.App
+)
 
 // GetFirebaseApp return firebase app instance
 func GetFirebaseApp() *firebase.App {
+	if firebaseApp != nil {
+		return firebaseApp
+	}
+
 	conf := &firebase.Config{
 		DatabaseURL: os.Getenv("FIREBASE_DATABASE_URL"),
 	}
@@ -26,12 +33,13 @@ func GetFirebaseApp() *firebase.App {
 		log.Fatalln("Error initializing app:", err)
 	}
 
-	return app
+	firebaseApp = app
+	return firebaseApp
 }
 
 // GetFirebaseDB db instance
 func GetFirebaseDB() *db.Client {
-	client, err := GetFirebaseApp().Database(ctx)
+	client, err := firebaseApp.Database(ctx)
 	if err != nil {
 		log.Fatalln("Error initializing database client:", err)
 	}
