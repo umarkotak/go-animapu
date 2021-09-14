@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gocolly/colly"
 	"github.com/sirupsen/logrus"
@@ -45,7 +46,7 @@ func GetReleases() (models.MangaDB, error) {
 	c := colly.NewCollector()
 
 	prevTitle := ""
-	idx := 1
+	idx := 100000
 
 	c.OnHTML("div.alt.p-1 div.row.no-gutters div", func(e *colly.HTMLElement) {
 		if e.Attr("class") == "col-6 pbreak" {
@@ -59,9 +60,12 @@ func GetReleases() (models.MangaDB, error) {
 			mangahubTitle = strings.Replace(mangahubTitle, "?", "", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, ".", "", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, "&", "", -1)
+			mangahubTitle = strings.Replace(mangahubTitle, ":", "", -1)
+			mangahubTitle = strings.Replace(mangahubTitle, ",", "", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, "(", "", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, ")", "", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, "-", "", -1)
+			mangahubTitle = strings.Replace(mangahubTitle, "\"", "", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, "  ", "-", -1)
 			mangahubTitle = strings.Replace(mangahubTitle, " ", "-", -1)
 
@@ -78,8 +82,11 @@ func GetReleases() (models.MangaDB, error) {
 				mangaLastChapterString = mangaLastChapterBreaked[len(mangaLastChapterBreaked)-1]
 			}
 
-			var mangaLastChapter int64
-			mangaLastChapter, err := strconv.ParseInt(mangaLastChapterString, 10, 64)
+			mangaLastChapterString = strings.Replace(mangaLastChapterString, "a", "", -1)
+			mangaLastChapterString = strings.Replace(mangaLastChapterString, "b", "", -1)
+			mangaLastChapterString = strings.Replace(mangaLastChapterString, "c", "", -1)
+			var mangaLastChapter float64
+			mangaLastChapter, err := strconv.ParseFloat(mangaLastChapterString, 64)
 			if err != nil {
 				mangaLastChapter = 150
 			}
@@ -96,11 +103,12 @@ func GetReleases() (models.MangaDB, error) {
 			if !found {
 				mangaDatas[mangahubTitle] = &mangaData
 			}
-			idx++
+			idx--
 		}
 
 	})
 
+	c.SetRequestTimeout(60 * time.Second)
 	err := c.Visit(url)
 	if err != nil {
 		logrus.Errorf("There is some error: %v", err)

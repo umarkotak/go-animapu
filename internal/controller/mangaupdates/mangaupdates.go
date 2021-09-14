@@ -20,6 +20,7 @@ func GetReleases(c *gin.Context) {
 	mangaDB, err := scrapper.GetReleases()
 	if err != nil {
 		http_req.RenderResponse(c, 422, err)
+		return
 	}
 
 	http_req.RenderResponse(c, 200, mangaDB)
