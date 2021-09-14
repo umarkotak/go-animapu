@@ -20,6 +20,7 @@ import (
 	cUser "github.com/umarkotak/go-animapu/internal/controller/user"
 	"github.com/umarkotak/go-animapu/internal/models"
 	pkgAppCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
+	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
 
 var (
@@ -112,37 +113,24 @@ func Start() {
 }
 
 func recoveryHandler(c *gin.Context, err interface{}) {
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-	c.JSON(
-		500,
-		gin.H{
-			"success": false,
-			"data":    nil,
-			"error":   fmt.Sprintf("Internal server error: %v", err),
-		},
-	)
-	c.AbortWithStatus(500)
+	http_req.RenderResponse(c, 500, gin.H{
+		"success": false,
+		"data":    nil,
+		"error":   fmt.Sprintf("Internal server error: %v", err),
+	})
+	return
 }
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.Method == "OPTIONS" {
-			c.Header("Access-Control-Allow-Origin", "*")
-			c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-			c.Header("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-			c.JSON(
-				200,
-				gin.H{
-					"success": true,
-					"data":    nil,
-					"error":   "",
-				},
-			)
+			http_req.RenderResponse(c, 200, gin.H{
+				"success": true,
+				"data":    nil,
+				"error":   "",
+			})
 			return
 		}
-
 		c.Next()
 	}
 }
