@@ -25,3 +25,27 @@ func GetReleases(c *gin.Context) {
 
 	http_req.RenderResponse(c, 200, mangaDB)
 }
+
+func Search(c *gin.Context) {
+	title := c.Query("title")
+
+	mangaDB, err := scrapper.Search(title)
+	if err != nil {
+		http_req.RenderResponse(c, 422, err)
+		return
+	}
+
+	http_req.RenderResponse(c, 200, mangaDB)
+}
+
+func ReleasesSearch(c *gin.Context) {
+	mangaupdateID := c.Param("mangaupdates_id")
+
+	mangaDetail, err := scrapper.ReleaseSearch(mangaupdateID)
+	if err != nil {
+		http_req.RenderResponse(c, 422, err)
+		return
+	}
+
+	http_req.RenderResponse(c, 200, mangaDetail)
+}

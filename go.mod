@@ -27,6 +27,7 @@ require (
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/temoto/robotstxt v1.1.1 // indirect
+	go4.org v0.0.0-20201209231011-d4a079459e60
 	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43 // indirect
 	google.golang.org/api v0.31.0
 	gopkg.in/bluesuncorp/validator.v5 v5.10.3 // indirect

@@ -2,6 +2,7 @@ package scrapper
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -9,6 +10,7 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/sirupsen/logrus"
 	"github.com/umarkotak/go-animapu/internal/models"
+	"go4.org/sort"
 )
 
 type (
@@ -54,21 +56,7 @@ func GetReleases() (models.MangaDB, error) {
 		}
 
 		if e.Attr("class") == "col-2 pl-1 pbreak" {
-			mangahubTitle := strings.ToLower(prevTitle)
-			mangahubTitle = strings.Replace(mangahubTitle, "%", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, "'", "-", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, "?", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, ".", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, "&", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, ":", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, ",", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, "(", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, ")", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, "-", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, "\"", "", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, "  ", "-", -1)
-			mangahubTitle = strings.Replace(mangahubTitle, " ", "-", -1)
-
+			mangahubTitle := mangahubTitleCostructor(prevTitle)
 			mangaLastChapters := strings.Split(e.Text, "c.")
 			var mangaLastChapterString string
 			if len(mangaLastChapters) > 0 {
@@ -116,4 +104,130 @@ func GetReleases() (models.MangaDB, error) {
 	}
 
 	return mangaDB, nil
+}
+
+func ReleaseSearch(mangaupdateID string) (models.MangaDetail, error) {
+	mangaDetail := models.MangaDetail{}
+
+	url := fmt.Sprintf("https://www.mangaupdates.com/releases.html?stype=series&search=%v&page=1&perpage=100&orderby=date&asc=desc", mangaupdateID)
+
+	c := colly.NewCollector()
+
+	c.OnHTML("div#main_content div.p-2.pt-2.pb-2.text div.row.no-gutters div", func(e *colly.HTMLElement) {
+		if e.Attr("class") == "col-4 text" {
+			if mangaDetail.Title == "" {
+				mangaDetail.Title = e.ChildText("a")
+				mangaDetail.DetailLink = e.ChildAttr("a", "href")
+
+				mangaupdatesIDRaw := strings.Split(mangaDetail.DetailLink, "series.html?id=")
+				if len(mangaupdatesIDRaw) >= 2 {
+					mangaDetail.MangaUpdatesID = mangaupdatesIDRaw[1]
+				}
+			}
+		}
+		if e.Attr("class") == "col-1 text text-center" {
+			chapter := e.ChildText("span")
+			if chapter != "" {
+				chapterInt, err := strconv.ParseInt(chapter, 10, 64)
+				if err == nil {
+					if chapterInt > mangaDetail.LastChapterInt {
+						mangaDetail.LastChapterInt = chapterInt
+						mangaDetail.LastChapter = fmt.Sprintf("%v", chapterInt)
+					}
+
+					mangaDetail.Chapters = append(mangaDetail.Chapters, fmt.Sprintf("%v", chapterInt))
+					mangaDetail.ChaptersInt = append(mangaDetail.ChaptersInt, chapterInt)
+				}
+			}
+		}
+	})
+
+	c.SetRequestTimeout(60 * time.Second)
+	err := c.Visit(url)
+	if err != nil {
+		logrus.Errorf("There is some error: %v", err)
+		return mangaDetail, err
+	}
+
+	if mangaDetail.DetailLink != "" {
+		cDetail := colly.NewCollector()
+
+		cDetail.OnHTML("center > img", func(e *colly.HTMLElement) {
+			mangaDetail.ImageURL = e.Attr("src")
+		})
+
+		cDetail.OnHTML("#main_content > div:nth-child(2) > div.row.no-gutters > div:nth-child(3) > div:nth-child(2)", func(e *colly.HTMLElement) {
+			mangaDetail.Description = e.Text
+		})
+
+		cDetail.Visit(mangaDetail.DetailLink)
+	}
+
+	sort.Slice(mangaDetail.ChaptersInt, func(i, j int) bool { return mangaDetail.ChaptersInt[i] < mangaDetail.ChaptersInt[j] })
+
+	return mangaDetail, nil
+}
+
+func Search(title string) (models.MangaDB, error) {
+	mangaDatas := map[string]*models.MangaData{}
+	mangaDB := models.MangaDB{MangaDatas: mangaDatas}
+
+	url := fmt.Sprintf("https://www.mangaupdates.com/series.html?search=%v", url.QueryEscape(title))
+
+	c := colly.NewCollector()
+
+	idx := 100000
+
+	c.OnHTML("#main_content > div.p-2.pt-2.pb-2.text > div:nth-child(2) > div", func(e *colly.HTMLElement) {
+		mangaData := models.MangaData{}
+
+		title := e.ChildText("div > div.col.text.p-1.pl-3 > div > div:nth-child(1) > a > u > b")
+
+		if title == "" {
+			return
+		}
+
+		mangaData.CompactTitle = title
+		mangaData.Title = mangahubTitleCostructor(title)
+
+		mangaupdatesSeriesLink := e.ChildAttr("div.col-auto.align-self-center.series_thumb.p-0 > a", "href")
+		mangaupdatesIDRaw := strings.Split(mangaupdatesSeriesLink, "series.html?id=")
+
+		mangaImageUrl := e.ChildAttr("div.col-auto.align-self-center.series_thumb.p-0 > a > img", "src")
+
+		if len(mangaupdatesIDRaw) >= 2 {
+			mangaData.MangaUpdatesID = mangaupdatesIDRaw[1]
+			mangaData.ImageURL = mangaImageUrl
+		}
+		mangaData.Weight = idx
+		idx--
+
+		mangaDatas[mangaData.Title] = &mangaData
+	})
+
+	err := c.Visit(url)
+	if err != nil {
+		logrus.Errorf("There is some error: %v", err)
+		return mangaDB, err
+	}
+
+	return mangaDB, nil
+}
+
+func mangahubTitleCostructor(source string) string {
+	result := strings.ToLower(source)
+	result = strings.Replace(result, "%", "", -1)
+	result = strings.Replace(result, "'", "-", -1)
+	result = strings.Replace(result, "?", "", -1)
+	result = strings.Replace(result, ".", "", -1)
+	result = strings.Replace(result, "&", "", -1)
+	result = strings.Replace(result, ":", "", -1)
+	result = strings.Replace(result, ",", "", -1)
+	result = strings.Replace(result, "(", "", -1)
+	result = strings.Replace(result, ")", "", -1)
+	result = strings.Replace(result, "-", "", -1)
+	result = strings.Replace(result, "\"", "", -1)
+	result = strings.Replace(result, "  ", "-", -1)
+	result = strings.Replace(result, " ", "-", -1)
+	return result
 }
