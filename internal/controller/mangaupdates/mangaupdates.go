@@ -8,7 +8,7 @@ import (
 
 func GetSeries(c *gin.Context) {
 	mangaID := c.Query("manga_id")
-	result, err := scrapper.GetSeries(mangaID)
+	result, err := scrapper.MangaupdatesGetSeries(mangaID)
 	if err != nil {
 		http_req.RenderResponse(c, 422, err)
 	}
@@ -17,7 +17,7 @@ func GetSeries(c *gin.Context) {
 }
 
 func GetReleases(c *gin.Context) {
-	mangaDB, err := scrapper.GetReleases()
+	mangaDB, err := scrapper.MangaupdatesGetReleases()
 	if err != nil {
 		http_req.RenderResponse(c, 422, err)
 		return
@@ -29,7 +29,7 @@ func GetReleases(c *gin.Context) {
 func Search(c *gin.Context) {
 	title := c.Query("title")
 
-	mangaDB, err := scrapper.Search(title)
+	mangaDB, err := scrapper.MangaupdatesSearch(title)
 	if err != nil {
 		http_req.RenderResponse(c, 422, err)
 		return
@@ -41,7 +41,7 @@ func Search(c *gin.Context) {
 func ReleasesSearch(c *gin.Context) {
 	mangaupdateID := c.Param("mangaupdates_id")
 
-	mangaDetail, err := scrapper.ReleaseSearch(mangaupdateID)
+	mangaDetail, err := scrapper.MangaupdatesReleaseSearch(mangaupdateID)
 	if err != nil {
 		http_req.RenderResponse(c, 422, err)
 		return

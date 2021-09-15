@@ -53,7 +53,6 @@ func Start() {
 	router.GET("/mangas/update", cManga.UpdateManga)
 	router.GET("/mangas/firebase", cManga.GetMangaFirebase)
 	router.GET("/mangas/firebase/update", cManga.UpdateMangaFirebase)
-	router.GET("/mangas/firebase/update", cManga.UpdateMangaFirebaseV2)
 	router.POST("/mangas/general/add", cManga.PostAddToGeneralMangaLibrary)
 
 	router.GET("/mangas/statistics", cManga.GetMangaStatistics)

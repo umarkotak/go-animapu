@@ -65,22 +65,6 @@ func UpdateMangaFirebase(c *gin.Context) {
 	http_req.RenderResponse(c, 200, mangaDB)
 }
 
-func UpdateMangaFirebaseV2(c *gin.Context) {
-	updated, _ := appCache.GetAppCache().Get("UPDATED_MANGA_CACHE")
-
-	// mangaDB := rManga.GetMangaFromFireBaseV2()
-	mangaDB := rManga.GetMangaFromFireBaseV2WithoutCache()
-	// mangaDB = sManga.UpdateMangaChapters(mangaDB)
-	if updated == nil {
-		fmt.Println("DIRECT UPDATE")
-		mangaDB = sManga.UpdateMangaChaptersV2(mangaDB)
-		go rManga.UpdateMangaToFireBase(mangaDB)
-		appCache.GetAppCache().Set("UPDATED_MANGA_CACHE", "UPDATED", 1*time.Minute)
-	}
-
-	http_req.RenderResponse(c, 200, mangaDB)
-}
-
 func PostAddToGeneralMangaLibrary(c *gin.Context) {
 	mangaData := models.MangaData{
 		Title:            "",

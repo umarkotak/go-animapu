@@ -20,7 +20,7 @@ type (
 	}
 )
 
-func GetSeries(mangaID string) ([]MangaUpdatesResult, error) {
+func MangaupdatesGetSeries(mangaID string) ([]MangaUpdatesResult, error) {
 	url := fmt.Sprintf("https://www.mangaupdates.com/series.html?id=%v", mangaID)
 
 	mangaUpdatesResults := []MangaUpdatesResult{}
@@ -39,7 +39,7 @@ func GetSeries(mangaID string) ([]MangaUpdatesResult, error) {
 	return mangaUpdatesResults, err
 }
 
-func GetReleases() (models.MangaDB, error) {
+func MangaupdatesGetReleases() (models.MangaDB, error) {
 	url := fmt.Sprintf("https://www.mangaupdates.com/releases.html")
 
 	mangaDatas := map[string]*models.MangaData{}
@@ -106,7 +106,7 @@ func GetReleases() (models.MangaDB, error) {
 	return mangaDB, nil
 }
 
-func ReleaseSearch(mangaupdateID string) (models.MangaDetail, error) {
+func MangaupdatesReleaseSearch(mangaupdateID string) (models.MangaDetail, error) {
 	mangaDetail := models.MangaDetail{}
 
 	url := fmt.Sprintf("https://www.mangaupdates.com/releases.html?stype=series&search=%v&page=1&perpage=100&orderby=date&asc=desc", mangaupdateID)
@@ -145,7 +145,7 @@ func ReleaseSearch(mangaupdateID string) (models.MangaDetail, error) {
 	c.SetRequestTimeout(60 * time.Second)
 	err := c.Visit(url)
 	if err != nil {
-		logrus.Errorf("There is some error: %v", err)
+		logrus.Errorf("There is some error: %v; %v", mangaupdateID, err)
 		return mangaDetail, err
 	}
 
@@ -168,9 +168,9 @@ func ReleaseSearch(mangaupdateID string) (models.MangaDetail, error) {
 	return mangaDetail, nil
 }
 
-func Search(title string) (models.MangaDB, error) {
+func MangaupdatesSearch(title string) (models.MangaDB, error) {
 	mangaDatas := map[string]*models.MangaData{}
-	mangaDB := models.MangaDB{MangaDatas: mangaDatas}
+	mangaDB := models.MangaDB{MangaDatas: mangaDatas, MangaDataKeys: []string{}}
 
 	url := fmt.Sprintf("https://www.mangaupdates.com/series.html?search=%v", url.QueryEscape(title))
 
@@ -203,11 +203,12 @@ func Search(title string) (models.MangaDB, error) {
 		idx--
 
 		mangaDatas[mangaData.Title] = &mangaData
+		mangaDB.MangaDataKeys = append(mangaDB.MangaDataKeys, mangaData.Title)
 	})
 
 	err := c.Visit(url)
 	if err != nil {
-		logrus.Errorf("There is some error: %v", err)
+		logrus.Errorf("There is some error: %v; %v", title, err)
 		return mangaDB, err
 	}
 
