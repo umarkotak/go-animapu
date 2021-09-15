@@ -12,8 +12,6 @@ import (
 	"github.com/umarkotak/go-animapu/internal/models"
 	rManga "github.com/umarkotak/go-animapu/internal/repository/manga"
 	sManga "github.com/umarkotak/go-animapu/internal/service/manga"
-	sScrapper "github.com/umarkotak/go-animapu/internal/service/scrapper"
-	sStatistic "github.com/umarkotak/go-animapu/internal/service/statistic"
 	appCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
 	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
@@ -67,71 +65,20 @@ func UpdateMangaFirebase(c *gin.Context) {
 	http_req.RenderResponse(c, 200, mangaDB)
 }
 
-// GetMangaSearch search manga title
-func GetMangaSearch(c *gin.Context) {
-	title := c.Query("title")
+func UpdateMangaFirebaseV2(c *gin.Context) {
+	updated, _ := appCache.GetAppCache().Get("UPDATED_MANGA_CACHE")
 
-	mangaDB := sScrapper.SearchMangaTitle(title)
+	// mangaDB := rManga.GetMangaFromFireBaseV2()
+	mangaDB := rManga.GetMangaFromFireBaseV2WithoutCache()
+	// mangaDB = sManga.UpdateMangaChapters(mangaDB)
+	if updated == nil {
+		fmt.Println("DIRECT UPDATE")
+		mangaDB = sManga.UpdateMangaChaptersV2(mangaDB)
+		go rManga.UpdateMangaToFireBase(mangaDB)
+		appCache.GetAppCache().Set("UPDATED_MANGA_CACHE", "UPDATED", 1*time.Minute)
+	}
 
 	http_req.RenderResponse(c, 200, mangaDB)
-}
-
-// GetMangaTodays list of todays manga
-func GetMangaTodays(c *gin.Context) {
-	mangaDB := sScrapper.GetTodaysMangaTitleV2()
-
-	http_req.RenderResponse(c, 200, mangaDB)
-}
-
-func GetMangaStatistics(c *gin.Context) {
-	result := sStatistic.GenerateMangaStatistic()
-
-	http_req.RenderResponse(c, 200, result)
-}
-
-func GetDailyMangaStatistics(c *gin.Context) {
-	result := sStatistic.GenerateDailyMangaStatistic()
-
-	http_req.RenderResponse(c, 200, result)
-}
-
-func GetMangaDetail(c *gin.Context) {
-	manga_title := c.Request.URL.Query().Get("manga_title")
-
-	result := sScrapper.GetMangaDetailV1(manga_title)
-
-	http_req.RenderResponse(c, 200, result)
-}
-
-func GetMaidMyHome(c *gin.Context) {
-	result := sScrapper.ScrapMaidMyHomePage()
-
-	http_req.RenderResponse(c, 200, result)
-}
-
-func GetMaidMySearch(c *gin.Context) {
-	query := c.Request.URL.Query().Get("query")
-
-	result := sScrapper.ScrapMaidMyMangaSearchPage(query)
-
-	http_req.RenderResponse(c, 200, result)
-}
-
-func GetMaidMyMangaDetail(c *gin.Context) {
-	manga_title := c.Request.URL.Query().Get("manga_title")
-
-	result := sScrapper.ScrapMaidMyMangaDetailPage(manga_title)
-
-	http_req.RenderResponse(c, 200, result)
-}
-
-func GetMaidMyMangaChapterDetail(c *gin.Context) {
-	manga_title := c.Request.URL.Query().Get("manga_chapter")
-	manga_chapter := c.Request.URL.Query().Get("manga_chapter")
-
-	result := sScrapper.ScrapMaidMyMangaChapterDetailPage(manga_title, manga_chapter)
-
-	http_req.RenderResponse(c, 200, result)
 }
 
 func PostAddToGeneralMangaLibrary(c *gin.Context) {

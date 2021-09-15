@@ -53,16 +53,20 @@ func Start() {
 	router.GET("/mangas/update", cManga.UpdateManga)
 	router.GET("/mangas/firebase", cManga.GetMangaFirebase)
 	router.GET("/mangas/firebase/update", cManga.UpdateMangaFirebase)
-	router.GET("/mangas/search_v1", cManga.GetMangaSearch)
-	router.GET("/mangas/todays_v1", cManga.GetMangaTodays)
+	router.GET("/mangas/firebase/update", cManga.UpdateMangaFirebaseV2)
+	router.POST("/mangas/general/add", cManga.PostAddToGeneralMangaLibrary)
+
 	router.GET("/mangas/statistics", cManga.GetMangaStatistics)
 	router.GET("/mangas/daily_manga_statistics", cManga.GetDailyMangaStatistics)
+
 	router.GET("/mangas_detail", cManga.GetMangaDetail)
+	router.GET("/mangas/search_v1", cManga.GetMangaSearch)
+	router.GET("/mangas/todays_v1", cManga.GetMangaTodays)
+
 	router.GET("/mangas/maid_my/home", cManga.GetMaidMyHome)
 	router.GET("/mangas/maid_my/search", cManga.GetMaidMySearch)
 	router.GET("/mangas/maid_my/manga_detail", cManga.GetMaidMyMangaDetail)
 	router.GET("/mangas/maid_my/manga_chapter_detail", cManga.GetMaidMyMangaChapterDetail)
-	router.POST("/mangas/general/add", cManga.PostAddToGeneralMangaLibrary)
 
 	// users
 	router.POST("/users/register", cUser.RegisterUserFirebase)
@@ -92,10 +96,8 @@ func Start() {
 	router.GET("/mangaupdates/releases", cMangaupdates.GetReleases)
 	router.GET("/mangaupdates/series", cMangaupdates.GetSeries)
 	router.GET("/mangaupdates/search", cMangaupdates.Search)
-	// /mangaupdates/search -> https://www.mangaupdates.com/search.html?search=naruto
 
 	// web sockets
-
 	hub := models.NewHub()
 	go hub.Run()
 
