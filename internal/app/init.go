@@ -67,6 +67,11 @@ func Start() {
 	router.GET("/mangas/maid_my/manga_detail", cManga.GetMaidMyMangaDetail)
 	router.GET("/mangas/maid_my/manga_chapter_detail", cManga.GetMaidMyMangaChapterDetail)
 
+	router.GET("/mangas/klik_manga/home", cManga.GetKlikMangaHome)
+	router.GET("/mangas/klik_manga/search", cManga.GetKlikMangaSearch)
+	router.GET("/mangas/klik_manga/manga/:manga_id", cManga.GetKlikMangaDetail)
+	router.GET("/mangas/klik_manga/manga/:manga_id/:manga_chapter", cManga.GetKlikMangaChapterDetail)
+
 	// users
 	router.POST("/users/register", cUser.RegisterUserFirebase)
 	router.POST("/users/login", cUser.LoginUser)

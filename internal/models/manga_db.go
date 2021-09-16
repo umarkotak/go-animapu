@@ -3,7 +3,7 @@ package models
 // MangaDB manga database representative
 type MangaDB struct {
 	MangaDatas    map[string]*MangaData `json:"manga_db"`
-	MangaDataKeys []string
+	MangaDataKeys []string              `json:"manga_data_keys"`
 }
 
 // MangaDBFromInterface return MangaDB from map[string]interface{}

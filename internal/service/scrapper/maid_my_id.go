@@ -76,6 +76,7 @@ func ScrapMaidMyMangaSearchPage(query string) models.MangaDB {
 	c := colly.NewCollector()
 
 	mangaDatas := map[string]*models.MangaData{}
+	mangaDataKeys := []string{}
 
 	maxWeight := 1000000
 	idx := 0
@@ -97,7 +98,8 @@ func ScrapMaidMyMangaSearchPage(query string) models.MangaDB {
 		idx += 1
 
 		tempMangaData := models.MangaData{
-			CompactTitle:     mangaTitle,
+			Title:            mangaTitle,
+			CompactTitle:     strings.Replace(mangaTitle, "-", " ", -1),
 			MangaLastChapter: int(lastChapter),
 			AveragePage:      150,
 			ImageURL:         imageLink,
@@ -105,12 +107,14 @@ func ScrapMaidMyMangaSearchPage(query string) models.MangaDB {
 			Weight:           weight,
 		}
 		mangaDatas[mangaTitle] = &tempMangaData
+		mangaDataKeys = append(mangaDataKeys, mangaTitle)
 	})
 
 	c.Visit(fmt.Sprintf("%v/?s=%v", maidMyHost, query))
 
 	mangaDB := models.MangaDB{
-		MangaDatas: mangaDatas,
+		MangaDatas:    mangaDatas,
+		MangaDataKeys: mangaDataKeys,
 	}
 	return mangaDB
 }
