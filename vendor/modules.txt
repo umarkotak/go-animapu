@@ -132,6 +132,9 @@ go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/propagation
 go.opencensus.io/trace/tracestate
+# go4.org v0.0.0-20201209231011-d4a079459e60
+go4.org/reflectutil
+go4.org/sort
 # golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 golang.org/x/crypto/sha3
 # golang.org/x/lint v0.0.0-20200302205851-738671d3881b
