@@ -96,6 +96,12 @@ func Start() {
 	router.GET("/mangaupdates/series", cMangaupdates.GetSeries)
 	router.GET("/mangaupdates/search", cMangaupdates.Search)
 
+	// klik manga scrapper
+	// HOME: https://klikmanga.com/
+	// DETAIL WITH CHAPTER: https://klikmanga.com/manga/solo-leveling/
+	// CHAPTER: https://klikmanga.com/manga/solo-leveling/chapter-167/
+	// SEARCH: https://klikmanga.com/?s=solo+leveling&post_type=wp-manga
+
 	// web sockets
 	hub := models.NewHub()
 	go hub.Run()
