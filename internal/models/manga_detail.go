@@ -2,6 +2,7 @@ package models
 
 type MangaDetail struct {
 	Title          string   `json:"title"`
+	CompactTitle   string   `json:"compact_title"`
 	Chapters       []string `json:"chapters"`
 	ChaptersInt    []int64  `json:"chapters_int"`
 	ChapterLinks   []string `json:"chapter_links"`

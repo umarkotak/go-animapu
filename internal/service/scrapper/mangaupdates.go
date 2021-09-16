@@ -48,11 +48,17 @@ func MangaupdatesGetReleases() (models.MangaDB, error) {
 	c := colly.NewCollector()
 
 	prevTitle := ""
+	perveMangadexID := ""
 	idx := 100000
 
 	c.OnHTML("div.alt.p-1 div.row.no-gutters div", func(e *colly.HTMLElement) {
 		if e.Attr("class") == "col-6 pbreak" {
 			prevTitle = e.ChildText("a")
+			perveMangadexID = e.ChildAttr("a", "href")
+			mangaupdatesIDRaw := strings.Split(perveMangadexID, "series.html?id=")
+			if len(mangaupdatesIDRaw) >= 2 {
+				perveMangadexID = mangaupdatesIDRaw[1]
+			}
 		}
 
 		if e.Attr("class") == "col-2 pl-1 pbreak" {
@@ -79,13 +85,12 @@ func MangaupdatesGetReleases() (models.MangaDB, error) {
 				mangaLastChapter = 150
 			}
 
-			fmt.Println(mangahubTitle, mangaLastChapters)
-
 			mangaData := models.MangaData{
 				Title:            mangahubTitle,
 				CompactTitle:     prevTitle,
 				MangaLastChapter: int(mangaLastChapter),
 				Weight:           idx,
+				MangaUpdatesID:   perveMangadexID,
 			}
 			_, found := mangaDatas[mangahubTitle]
 			if !found {
@@ -115,9 +120,10 @@ func MangaupdatesReleaseSearch(mangaupdateID string) (models.MangaDetail, error)
 
 	c.OnHTML("div#main_content div.p-2.pt-2.pb-2.text div.row.no-gutters div", func(e *colly.HTMLElement) {
 		if e.Attr("class") == "col-4 text" {
-			if mangaDetail.Title == "" {
-				mangaDetail.Title = e.ChildText("a")
+			if mangaDetail.CompactTitle == "" {
+				mangaDetail.CompactTitle = e.ChildText("a")
 				mangaDetail.DetailLink = e.ChildAttr("a", "href")
+				mangaDetail.Title = mangahubTitleCostructor(mangaDetail.CompactTitle)
 
 				mangaupdatesIDRaw := strings.Split(mangaDetail.DetailLink, "series.html?id=")
 				if len(mangaupdatesIDRaw) >= 2 {
