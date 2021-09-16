@@ -17,6 +17,7 @@ var (
 func ScrapMaidMyHomePage() models.MangaDB {
 	c := colly.NewCollector()
 
+	mangaDataKeys := []string{}
 	mangaDatas := map[string]*models.MangaData{}
 
 	maxWeight := 1000000
@@ -53,6 +54,7 @@ func ScrapMaidMyHomePage() models.MangaDB {
 		_, ok := mangaDatas[mangaTitle]
 		if !ok {
 			mangaDatas[mangaTitle] = &tempMangaData
+			mangaDataKeys = append(mangaDataKeys, mangaTitle)
 			maxWeight--
 		}
 	})
@@ -64,7 +66,8 @@ func ScrapMaidMyHomePage() models.MangaDB {
 	c.Visit(fmt.Sprintf("%v/page/5/", maidMyHost))
 
 	mangaDB := models.MangaDB{
-		MangaDatas: mangaDatas,
+		MangaDataKeys: mangaDataKeys,
+		MangaDatas:    mangaDatas,
 	}
 	return mangaDB
 }
