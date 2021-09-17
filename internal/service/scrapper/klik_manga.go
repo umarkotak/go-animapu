@@ -159,7 +159,8 @@ func ScrapKlikMangaSearch(searchParams models.KlikMangaSearchParams) models.Mang
 		lastChapterID := strings.Replace(lastChapterLink, prefix, "", -1)
 		lastChapterID = strings.Replace(lastChapterID, "/", "", -1)
 
-		lastChapterInt, _ := strconv.ParseFloat(lastChapterID, 64)
+		lastChapterString := strings.Replace(lastChapterID, "chapter-", "", -1)
+		lastChapterInt, _ := strconv.ParseFloat(lastChapterString, 64)
 
 		imageURL := e.ChildAttr("div.col-4.col-12.col-md-2 > div > a > img", "src")
 
