@@ -2,6 +2,7 @@ package manga
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/umarkotak/go-animapu/internal/models"
 	sScrapper "github.com/umarkotak/go-animapu/internal/service/scrapper"
 	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
@@ -30,9 +31,13 @@ func GetKlikMangaChapterDetail(c *gin.Context) {
 }
 
 func GetKlikMangaSearch(c *gin.Context) {
-	query := c.Request.URL.Query().Get("query")
+	searchParams := models.KlikMangaSearchParams{
+		Title:  c.Request.URL.Query().Get("title"),
+		Status: c.Request.URL.Query().Get("status"),
+		Genre:  c.Request.URL.Query().Get("genre"),
+	}
 
-	result := sScrapper.ScrapMaidMyMangaSearchPage(query)
+	result := sScrapper.ScrapKlikMangaSearch(searchParams)
 
 	http_req.RenderResponse(c, 200, result)
 }

@@ -15,7 +15,6 @@ func ScrapKlikMangaHomePage() models.MangaDB {
 
 	mangaDataKeys := []string{}
 	mangaDatas := map[string]*models.MangaData{}
-
 	weight := 10000
 
 	c.OnHTML("#loop-content > div > div > div > div", func(e *colly.HTMLElement) {
@@ -134,4 +133,58 @@ func ScrapKlikMangaChapterDetailPage(title, chapter string) models.MangaChapterD
 	}
 
 	return mangaChapter
+}
+
+func ScrapKlikMangaSearch(searchParams models.KlikMangaSearchParams) models.MangaDB {
+	c := colly.NewCollector()
+	url := fmt.Sprintf(
+		"https://klikmanga.com/?s=%v&post_type=wp-manga&op=&author=&artist=&release=&adult=&genre%5B%5D=%v&status%5B%5D=%v",
+		searchParams.Title, searchParams.Genre, searchParams.Status,
+	)
+
+	mangaDataKeys := []string{}
+	mangaDatas := map[string]*models.MangaData{}
+	weight := 10000
+
+	c.OnHTML("body > div.wrap > div > div.site-content > div.c-page-content > div > div > div > div > div.main-col-inner > div > div.tab-content-wrap > div > div", func(e *colly.HTMLElement) {
+		mangaLink := e.ChildAttr("div div a", "href")
+
+		mangaTitle := strings.Replace(mangaLink, "https://klikmanga.com/manga/", "", -1)
+		mangaTitle = strings.Replace(mangaTitle, "/", "", -1)
+
+		compactTitle := e.ChildText("div.col-8.col-12.col-md-10 > div.tab-summary > div.post-title > h3 > a")
+
+		lastChapterLink := e.ChildAttr("div.col-8.col-12.col-md-10 > div.tab-meta > div.meta-item.latest-chap > span.font-meta.chapter > a", "href")
+		prefix := fmt.Sprintf("https://klikmanga.com/manga/%v", mangaTitle)
+		lastChapterID := strings.Replace(lastChapterLink, prefix, "", -1)
+		lastChapterID = strings.Replace(lastChapterID, "/", "", -1)
+
+		lastChapterInt, _ := strconv.ParseFloat(lastChapterID, 64)
+
+		imageURL := e.ChildAttr("div.col-4.col-12.col-md-2 > div > a > img", "src")
+
+		mangaData := models.MangaData{
+			Title:            mangaTitle,
+			ImageURL:         imageURL,
+			CompactTitle:     compactTitle,
+			LastChapterID:    lastChapterID,
+			MangaLastChapter: int(lastChapterInt),
+			Weight:           weight,
+		}
+
+		mangaDatas[mangaData.Title] = &mangaData
+		mangaDataKeys = append(mangaDataKeys, mangaData.Title)
+		weight--
+	})
+
+	err := c.Visit(url)
+	if err != nil {
+		logrus.Errorf("ScrapKlikMangaSearch: %v\n", err)
+	}
+
+	mangaDB := models.MangaDB{
+		MangaDataKeys: mangaDataKeys,
+		MangaDatas:    mangaDatas,
+	}
+	return mangaDB
 }

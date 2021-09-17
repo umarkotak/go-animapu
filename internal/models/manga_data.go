@@ -13,4 +13,5 @@ type MangaData struct {
 	Finder           string `json:"finder"`
 	MangadexID       string `json:"mangadex_id"`
 	MangaUpdatesID   string `json:"manga_updates_id"`
+	LastChapterID    string `json:"last_chapter_id"`
 }
