@@ -12,27 +12,27 @@ func GetKlikMangaHome(c *gin.Context) {
 	http_req.RenderResponse(c, 200, result)
 }
 
-func GetKlikMangaSearch(c *gin.Context) {
-	query := c.Request.URL.Query().Get("query")
-
-	result := sScrapper.ScrapMaidMyMangaSearchPage(query)
-
-	http_req.RenderResponse(c, 200, result)
-}
-
 func GetKlikMangaDetail(c *gin.Context) {
-	manga_title := c.Request.URL.Query().Get("manga_title")
+	manga_title := c.Param("manga_id")
 
-	result := sScrapper.ScrapMaidMyMangaDetailPage(manga_title)
+	result := sScrapper.ScrapKlikMangaDetailPage(manga_title)
 
 	http_req.RenderResponse(c, 200, result)
 }
 
 func GetKlikMangaChapterDetail(c *gin.Context) {
-	manga_title := c.Request.URL.Query().Get("manga_chapter")
-	manga_chapter := c.Request.URL.Query().Get("manga_chapter")
+	manga_title := c.Param("manga_id")
+	manga_chapter := c.Param("manga_chapter")
 
-	result := sScrapper.ScrapMaidMyMangaChapterDetailPage(manga_title, manga_chapter)
+	result := sScrapper.ScrapKlikMangaChapterDetailPage(manga_title, manga_chapter)
+
+	http_req.RenderResponse(c, 200, result)
+}
+
+func GetKlikMangaSearch(c *gin.Context) {
+	query := c.Request.URL.Query().Get("query")
+
+	result := sScrapper.ScrapMaidMyMangaSearchPage(query)
 
 	http_req.RenderResponse(c, 200, result)
 }

@@ -1,10 +1,12 @@
 package scrapper
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/gocolly/colly"
+	"github.com/sirupsen/logrus"
 	"github.com/umarkotak/go-animapu/internal/models"
 )
 
@@ -43,11 +45,93 @@ func ScrapKlikMangaHomePage() models.MangaDB {
 		weight--
 	})
 
-	c.Visit("https://klikmanga.com/")
+	err := c.Visit("https://klikmanga.com/")
+	if err != nil {
+		logrus.Errorf("ScrapKlikMangaHomePage: %v\n", err)
+	}
 
 	mangaDB := models.MangaDB{
 		MangaDataKeys: mangaDataKeys,
 		MangaDatas:    mangaDatas,
 	}
 	return mangaDB
+}
+
+func ScrapKlikMangaDetailPage(title string) models.MangaDetail {
+	c := colly.NewCollector()
+	url := fmt.Sprintf("https://klikmanga.com/manga/%v", title)
+	maxChapter := 0
+
+	mangaDetail := models.MangaDetail{
+		Title:        title,
+		ChapterLinks: []string{},
+		Chapters:     []string{},
+		ChaptersInt:  []int64{},
+	}
+
+	c.OnHTML("body > div.wrap > div > div.site-content > div > div.profile-manga > div > div > div > div.post-title > h1", func(e *colly.HTMLElement) {
+		mangaDetail.CompactTitle = e.Text
+	})
+
+	c.OnHTML("body > div.wrap > div > div.site-content > div > div.c-page-content.style-1 > div > div > div > div.main-col.col-md-8.col-sm-8 > div > div.c-page > div > div.page-content-listing.single-page > div > ul > li", func(e *colly.HTMLElement) {
+		chapterLink := e.ChildAttr("a", "href")
+
+		chapterLinkId := strings.Replace(chapterLink, url, "", -1)
+		chapterLinkId = strings.Replace(chapterLinkId, "/", "", -1)
+
+		chapterString := e.ChildText("a")
+		chapterString = strings.Replace(chapterString, "Chapter ", "", -1)
+		chapterInt, _ := strconv.ParseFloat(chapterString, 64)
+
+		mangaDetail.ChapterLinks = append(mangaDetail.ChapterLinks, chapterLink)
+		mangaDetail.Chapters = append(mangaDetail.Chapters, chapterLinkId)
+		mangaDetail.ChaptersInt = append(mangaDetail.ChaptersInt, int64(chapterInt))
+
+		if int(chapterInt) > maxChapter {
+			mangaDetail.LastChapter = chapterLinkId
+			mangaDetail.LastChapterInt = int64(chapterInt)
+			maxChapter = int(chapterInt)
+		}
+	})
+
+	c.OnHTML("body > div.wrap > div > div.site-content > div > div.profile-manga > div > div > div > div.tab-summary > div.summary_image > a > img", func(e *colly.HTMLElement) {
+		mangaDetail.ImageURL = e.Attr("src")
+	})
+
+	c.OnHTML("body > div.wrap > div > div.site-content > div > div.c-page-content.style-1 > div > div > div > div.main-col.col-md-8.col-sm-8 > div > div.c-page > div > div.description-summary > div > p", func(e *colly.HTMLElement) {
+		mangaDetail.Description = e.Text
+	})
+
+	c.OnHTML("body > div.wrap > div > div.site-content > div > div.profile-manga > div > div > div > div.tab-summary > div.summary_content_wrap > div > div.post-content > div:nth-child(8) > div.summary-content > div", func(e *colly.HTMLElement) {
+		mangaDetail.Genres = e.Text
+	})
+
+	err := c.Visit(url)
+	if err != nil {
+		logrus.Errorf("ScrapKlikMangaDetailPage: %v\n", err)
+	}
+
+	return mangaDetail
+}
+
+func ScrapKlikMangaChapterDetailPage(title, chapter string) models.MangaChapterDetail {
+	c := colly.NewCollector()
+	url := fmt.Sprintf("https://klikmanga.com/manga/%v/%v/?style=list", title, chapter)
+
+	mangaChapter := models.MangaChapterDetail{
+		Title:  title,
+		Images: []string{},
+	}
+
+	c.OnHTML("body > div.wrap > div > div.site-content > div > div > div > div > div > div > div.c-blog-post > div.entry-content > div > div > div.reading-content > div", func(e *colly.HTMLElement) {
+		image := e.ChildAttr("img.wp-manga-chapter-img", "src")
+		mangaChapter.Images = append(mangaChapter.Images, image)
+	})
+
+	err := c.Visit(url)
+	if err != nil {
+		logrus.Errorf("ScrapKlikMangaDetailPage: %v\n", err)
+	}
+
+	return mangaChapter
 }
