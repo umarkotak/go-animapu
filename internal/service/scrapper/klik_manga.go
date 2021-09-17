@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gocolly/colly"
 	"github.com/sirupsen/logrus"
@@ -144,9 +145,18 @@ func ScrapKlikMangaChapterDetailPage(title, chapter string) models.MangaChapterD
 
 func ScrapKlikMangaSearch(searchParams models.KlikMangaSearchParams) models.MangaDB {
 	c := colly.NewCollector()
+	var statusQuery, genreQuery string
+
+	if searchParams.Genre != "" {
+		genreQuery = fmt.Sprintf("&genre%%5B%%5D=%v", searchParams.Genre)
+	}
+	if searchParams.Status != "" {
+		statusQuery = fmt.Sprintf("&status%%5B%%5D=%v", searchParams.Status)
+	}
+
 	url := fmt.Sprintf(
-		`https://klikmanga.com/?s=%v&post_type=wp-manga&op=&author=&artist=&release=&adult=&genre%%5B%%5D=%v&status%%5B%%5D=%v`,
-		searchParams.Title, searchParams.Genre, searchParams.Status,
+		`https://klikmanga.com/?s=%v&post_type=wp-manga&op=&author=&artist=&release=&adult=%v%v`,
+		searchParams.Title, genreQuery, statusQuery,
 	)
 
 	mangaDataKeys := []string{}
@@ -185,6 +195,7 @@ func ScrapKlikMangaSearch(searchParams models.KlikMangaSearchParams) models.Mang
 		weight--
 	})
 
+	c.SetRequestTimeout(60 * time.Second)
 	err := c.Visit(url)
 	if err != nil {
 		logrus.Errorf("ScrapKlikMangaSearch: %v\n", err)
