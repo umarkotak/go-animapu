@@ -32,12 +32,19 @@ func ScrapKlikMangaHomePage() models.MangaDB {
 
 		imageURL := e.ChildAttr("div.item-thumb.hover-details.c-image-hover > a > img", "src")
 
+		lastChapterID := e.ChildAttr("div.item-summary > div.list-chapter > div:nth-child(1) > span.chapter.font-meta > a", "href")
+		tempLastChapterID := strings.Split(lastChapterID, "/")
+		if len(tempLastChapterID) >= 2 {
+			lastChapterID = tempLastChapterID[len(tempLastChapterID)-2]
+		}
+
 		mangaData := models.MangaData{
 			Title:            mangaTitle,
 			CompactTitle:     compactTitle,
 			MangaLastChapter: int(chapterFloat),
 			Weight:           weight,
 			ImageURL:         imageURL,
+			LastChapterID:    lastChapterID,
 		}
 		mangaDatas[mangaTitle] = &mangaData
 		mangaDataKeys = append(mangaDataKeys, mangaTitle)
