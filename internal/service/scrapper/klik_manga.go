@@ -145,7 +145,7 @@ func ScrapKlikMangaChapterDetailPage(title, chapter string) models.MangaChapterD
 func ScrapKlikMangaSearch(searchParams models.KlikMangaSearchParams) models.MangaDB {
 	c := colly.NewCollector()
 	url := fmt.Sprintf(
-		"https://klikmanga.com/?s=%v&post_type=wp-manga&op=&author=&artist=&release=&adult=&genre%5B%5D=%v&status%5B%5D=%v",
+		`https://klikmanga.com/?s=%v&post_type=wp-manga&op=&author=&artist=&release=&adult=&genre%%5B%%5D=%v&status%%5B%%5D=%v`,
 		searchParams.Title, searchParams.Genre, searchParams.Status,
 	)
 
