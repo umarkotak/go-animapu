@@ -2,7 +2,6 @@ package manga
 
 import (
 	"fmt"
-	"math/rand"
 	"net/http"
 	"sort"
 	"strconv"
@@ -106,16 +105,19 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 	currCount := 1
 	limit := 100
 
-	for _, mangaTitle := range keys {
+	logrus.Infof("executing update")
+	for idx, mangaTitle := range keys {
 		if currCount >= limit {
 			continue
 		}
+
+		logrus.Infof("updating:", idx, mangaTitle)
 
 		wg.Add(1)
 		// go checkMangaLatestChapter(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
 		// go checkMangaLatestChapterV2(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
 		// syncMangaUpdatesID(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
-		go checkMangaLatestChapterV3(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
+		checkMangaLatestChapterV3(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
 
 		currCount++
 	}
@@ -263,10 +265,9 @@ func syncMangaUpdatesID(wg *sync.WaitGroup, mangaTitle string, mangaDB *models.M
 
 func checkMangaLatestChapterV3(wg *sync.WaitGroup, mangaTitle string, mangaDB *models.MangaDB, updatedMangaTitles *[]string) {
 	defer wg.Done()
-
-	rand.Seed(time.Now().UnixNano())
-	n := rand.Intn(4)
-	time.Sleep(time.Duration(n) * time.Second)
+	// rand.Seed(time.Now().UnixNano())
+	// n := rand.Intn(10)
+	// time.Sleep(time.Duration(n) * time.Millisecond)
 
 	mangaDBMutex.RLock()
 	mangaData := mangaDB.MangaDatas[mangaTitle]
