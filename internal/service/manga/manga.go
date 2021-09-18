@@ -284,7 +284,7 @@ func checkMangaLatestChapterV3(wg *sync.WaitGroup, mangaTitle string, mangaDB *m
 		return
 	}
 
-	if mangaData.NewAdded <= 7 {
+	if mangaData.NewAdded <= 3 {
 		mangaData.NewAdded++
 		return
 	}
