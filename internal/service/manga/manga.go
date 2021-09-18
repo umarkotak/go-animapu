@@ -103,7 +103,7 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 	var wg sync.WaitGroup
 
 	currCount := 1
-	limit := 100
+	limit := 10000
 
 	logrus.Infof("executing update")
 	for idx, mangaTitle := range keys {
