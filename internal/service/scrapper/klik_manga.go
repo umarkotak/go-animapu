@@ -2,6 +2,7 @@ package scrapper
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -55,6 +56,69 @@ func ScrapKlikMangaHomePage() models.MangaDB {
 	err := c.Visit("https://klikmanga.com/")
 	if err != nil {
 		logrus.Errorf("ScrapKlikMangaHomePage: %v\n", err)
+	}
+
+	mangaDB := models.MangaDB{
+		MangaDataKeys: mangaDataKeys,
+		MangaDatas:    mangaDatas,
+	}
+	return mangaDB
+}
+
+func ScrapKlikMangaHomeNextPage(pageNo int64) models.MangaDB {
+	c := colly.NewCollector()
+
+	mangaDataKeys := []string{}
+	mangaDatas := map[string]*models.MangaData{}
+	weight := 10000
+
+	c.OnHTML("#loop-content > div > div > div > div", func(e *colly.HTMLElement) {
+		compactTitle := e.ChildText("div.item-summary > div.post-title.font-title > h3 > a")
+
+		mangaLink := e.ChildAttr("div.item-summary > div.post-title.font-title > h3 > a", "href")
+		mangaTitle := strings.Replace(mangaLink, "https://klikmanga.com/manga/", "", -1)
+		mangaTitle = strings.Replace(mangaTitle, "/", "", -1)
+
+		chapter := e.ChildText("div.item-summary > div.list-chapter > div > span.chapter.font-meta")
+		chapter = strings.Replace(chapter, "Chapter ", "", -1)
+		chapterBreaks := strings.Split(chapter, " ")
+		chapter = chapterBreaks[0]
+		chapterFloat, _ := strconv.ParseFloat(chapter, 64)
+
+		imageURL := e.ChildAttr("div.item-thumb.hover-details.c-image-hover > a > img", "src")
+
+		lastChapterID := e.ChildAttr("div.item-summary > div.list-chapter > div:nth-child(1) > span.chapter.font-meta > a", "href")
+		tempLastChapterID := strings.Split(lastChapterID, "/")
+		if len(tempLastChapterID) >= 2 {
+			lastChapterID = tempLastChapterID[len(tempLastChapterID)-2]
+		}
+
+		mangaData := models.MangaData{
+			Title:            mangaTitle,
+			CompactTitle:     compactTitle,
+			MangaLastChapter: int(chapterFloat),
+			Weight:           weight,
+			ImageURL:         imageURL,
+			LastChapterID:    lastChapterID,
+		}
+		mangaDatas[mangaTitle] = &mangaData
+		mangaDataKeys = append(mangaDataKeys, mangaTitle)
+		weight--
+	})
+
+	requestData := strings.NewReader("action=madara_load_more&page=1&template=madara-core%%2Fcontent%%2Fcontent-archive&vars%5Borderby%5D=meta_value_num&vars%5Bpaged%5D=1&vars%5Bposts_per_page%5D=40&vars%5Btax_query%5D%5Brelation%5D=OR&vars%5Bmeta_query%5D%5B0%5D%5Brelation%5D=AND&vars%5Bmeta_query%5D%5Brelation%5D=OR&vars%5Bpost_type%5D=wp-manga&vars%5Bpost_status%5D=publish&vars%5Bmeta_key%5D=_latest_update&vars%5Border%5D=desc&vars%5Bsidebar%5D=right&vars%5Bmanga_archives_item_layout%5D=big_thumbnail")
+	err := c.Request(
+		"POST",
+		"https://klikmanga.com/wp-admin/admin-ajax.php",
+		requestData,
+		colly.NewContext(),
+		http.Header{
+			"content-type": []string{"application/x-www-form-urlencoded"},
+		},
+	)
+
+	if err != nil {
+		logrus.Errorf("ScrapKlikMangaHomeNextPage: %v\n", err)
 	}
 
 	mangaDB := models.MangaDB{

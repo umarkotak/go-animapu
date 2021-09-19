@@ -10,6 +10,21 @@ import (
 )
 
 func GetKlikMangaHistory(c *gin.Context) {
+	auth := c.Request.Header["Authorization"][0]
+
+	userData, err := sUser.DetailService(auth)
+	if err != nil {
+		logrus.Errorf("sUser.DetailService: %v\n", err)
+		http_req.RenderResponse(c, 422, err)
+	}
+
+	klikMangaHistoriesMap, err := rUser.GetKlikMangaHistories(userData)
+	if err != nil {
+		logrus.Errorf("rUser.SetKlikMangaHistory: %v\n", err)
+		http_req.RenderResponse(c, 422, err)
+	}
+
+	http_req.RenderResponse(c, 200, klikMangaHistoriesMap)
 }
 
 func PostKlikMangaHistory(c *gin.Context) {

@@ -100,6 +100,10 @@ func SetKlikMangaHistory(userData models.UserData, klikMangaHistory models.KlikM
 		return fmt.Errorf("User not found")
 	}
 
+	if klikMangaHistory.Title == "" {
+		return fmt.Errorf("Title cannot be empty")
+	}
+
 	firebaseDB := firebaseHelper.GetFirebaseDB()
 
 	userRef := firebaseDB.NewRef("user_db")
@@ -115,7 +119,7 @@ func SetKlikMangaHistory(userData models.UserData, klikMangaHistory models.KlikM
 	return nil
 }
 
-func GetKlikMangaHistories(userData models.UserData, klikMangaHistory models.KlikMangaHistory) (map[string]models.KlikMangaHistory, error) {
+func GetKlikMangaHistories(userData models.UserData) (map[string]models.KlikMangaHistory, error) {
 	klikMangaHistoriesMap := map[string]models.KlikMangaHistory{}
 
 	if userData.Username == "" {
