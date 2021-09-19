@@ -1,6 +1,8 @@
 package user
 
 import (
+	"sort"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/umarkotak/go-animapu/internal/models"
@@ -24,7 +26,23 @@ func GetKlikMangaHistory(c *gin.Context) {
 		http_req.RenderResponse(c, 422, err)
 	}
 
-	http_req.RenderResponse(c, 200, klikMangaHistoriesMap)
+	klikMangaHistoriesList := []models.KlikMangaHistory{}
+	for _, v := range klikMangaHistoriesMap {
+		klikMangaHistoriesList = append(klikMangaHistoriesList, v)
+	}
+
+	// < ascending
+	// > descending
+	sort.Slice(klikMangaHistoriesList, func(i, j int) bool {
+		return klikMangaHistoriesList[i].UpdatedAtUnix > klikMangaHistoriesList[j].UpdatedAtUnix
+	})
+
+	response := map[string]interface{}{
+		"klik_manga_histories_map":  klikMangaHistoriesMap,
+		"klik_manga_histories_list": klikMangaHistoriesList,
+	}
+
+	http_req.RenderResponse(c, 200, response)
 }
 
 func PostKlikMangaHistory(c *gin.Context) {
