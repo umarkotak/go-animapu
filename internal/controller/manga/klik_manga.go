@@ -1,6 +1,8 @@
 package manga
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/umarkotak/go-animapu/internal/models"
 	sScrapper "github.com/umarkotak/go-animapu/internal/service/scrapper"
@@ -9,6 +11,15 @@ import (
 
 func GetKlikMangaHome(c *gin.Context) {
 	result := sScrapper.ScrapKlikMangaHomePage()
+
+	http_req.RenderResponse(c, 200, result)
+}
+
+func GetKlikMangaHomeNextPage(c *gin.Context) {
+	page := c.Param("page")
+	pageInt64, _ := strconv.ParseInt(page, 10, 64)
+
+	result := sScrapper.ScrapKlikMangaHomeNextPage(pageInt64)
 
 	http_req.RenderResponse(c, 200, result)
 }
@@ -38,6 +49,19 @@ func GetKlikMangaSearch(c *gin.Context) {
 	}
 
 	result := sScrapper.ScrapKlikMangaSearch(searchParams)
+
+	http_req.RenderResponse(c, 200, result)
+}
+
+func GetKlikMangaSearchNextPage(c *gin.Context) {
+	searchParams := models.KlikMangaSearchParams{
+		Title:  c.Request.URL.Query().Get("title"),
+		Status: c.Request.URL.Query().Get("status"),
+		Genre:  c.Request.URL.Query().Get("genre"),
+		Page:   c.Param("page"),
+	}
+
+	result := sScrapper.ScrapKlikMangaSearchNextPage(searchParams)
 
 	http_req.RenderResponse(c, 200, result)
 }

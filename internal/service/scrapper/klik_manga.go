@@ -72,7 +72,7 @@ func ScrapKlikMangaHomeNextPage(pageNo int64) models.MangaDB {
 	mangaDatas := map[string]*models.MangaData{}
 	weight := 10000
 
-	c.OnHTML("#loop-content > div > div > div > div", func(e *colly.HTMLElement) {
+	c.OnHTML("div.page-listing-item > div.row.row-eq-height > div.col-6.col-md-3.badge-pos-2 > div.page-item-detail.manga", func(e *colly.HTMLElement) {
 		compactTitle := e.ChildText("div.item-summary > div.post-title.font-title > h3 > a")
 
 		mangaLink := e.ChildAttr("div.item-summary > div.post-title.font-title > h3 > a", "href")
@@ -104,16 +104,32 @@ func ScrapKlikMangaHomeNextPage(pageNo int64) models.MangaDB {
 		mangaDatas[mangaTitle] = &mangaData
 		mangaDataKeys = append(mangaDataKeys, mangaTitle)
 		weight--
+
+		fmt.Println(mangaTitle, lastChapterID)
 	})
 
-	requestData := strings.NewReader("action=madara_load_more&page=1&template=madara-core%%2Fcontent%%2Fcontent-archive&vars%5Borderby%5D=meta_value_num&vars%5Bpaged%5D=1&vars%5Bposts_per_page%5D=40&vars%5Btax_query%5D%5Brelation%5D=OR&vars%5Bmeta_query%5D%5B0%5D%5Brelation%5D=AND&vars%5Bmeta_query%5D%5Brelation%5D=OR&vars%5Bpost_type%5D=wp-manga&vars%5Bpost_status%5D=publish&vars%5Bmeta_key%5D=_latest_update&vars%5Border%5D=desc&vars%5Bsidebar%5D=right&vars%5Bmanga_archives_item_layout%5D=big_thumbnail")
+	requestData := strings.NewReader(fmt.Sprintf(`action=madara_load_more&page=%v&template=madara-core/content/content-archive&vars[orderby%%5D=meta_value_num&vars[paged%%5D=1&vars[posts_per_page%%5D=40&vars[tax_query][relation]=OR&vars[meta_query][0][relation]=AND&vars[meta_query][relation]=OR&vars[post_type]=wp-manga&vars[post_status]=publish&vars[meta_key]=_latest_update&vars[order]=desc&vars[sidebar]=right&vars[manga_archives_item_layout]=big_thumbnail`, pageNo))
 	err := c.Request(
 		"POST",
 		"https://klikmanga.com/wp-admin/admin-ajax.php",
 		requestData,
 		colly.NewContext(),
 		http.Header{
-			"content-type": []string{"application/x-www-form-urlencoded"},
+			"content-type":       []string{"application/x-www-form-urlencoded; charset=UTF-8"},
+			"Authority":          []string{"klikmanga.com"},
+			"Sec-Ch-Ua":          []string{"\"Google Chrome\";v=\"93\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"93\""},
+			"Accept-Language":    []string{"en-US,en;q=0.9,id;q=0.8"},
+			"Sec-Ch-Ua-Mobile":   []string{"?0"},
+			"User-Agent":         []string{"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"},
+			"Content-Type":       []string{"application/x-www-form-urlencoded; charset=UTF-8"},
+			"Accept":             []string{"*/*"},
+			"X-Requested-With":   []string{"XMLHttpRequest"},
+			"Sec-Ch-Ua-Platform": []string{"\"macOS\""},
+			"Origin":             []string{"https://klikmanga.com"},
+			"Sec-Fetch-Site":     []string{"same-origin"},
+			"Sec-Fetch-Mode":     []string{"cors"},
+			"Sec-Fetch-Dest":     []string{"empty"},
+			"Referer":            []string{"https://klikmanga.com/"},
 		},
 	)
 
@@ -219,7 +235,7 @@ func ScrapKlikMangaSearch(searchParams models.KlikMangaSearchParams) models.Mang
 	}
 
 	url := fmt.Sprintf(
-		`https://klikmanga.com/?s=%v&post_type=wp-manga&op=&author=&artist=&release=&adult=%v%v`,
+		`https://klikmanga.com/?s=%v&post_type=wp-manga&op=&author=&artist=&release=&adult=&m_orderby=latest%v%v`,
 		searchParams.Title, genreQuery, statusQuery,
 	)
 
@@ -261,6 +277,81 @@ func ScrapKlikMangaSearch(searchParams models.KlikMangaSearchParams) models.Mang
 
 	c.SetRequestTimeout(60 * time.Second)
 	err := c.Visit(url)
+	if err != nil {
+		logrus.Errorf("ScrapKlikMangaSearch: %v\n", err)
+	}
+
+	mangaDB := models.MangaDB{
+		MangaDataKeys: mangaDataKeys,
+		MangaDatas:    mangaDatas,
+	}
+	return mangaDB
+}
+
+func ScrapKlikMangaSearchNextPage(searchParams models.KlikMangaSearchParams) models.MangaDB {
+	c := colly.NewCollector()
+
+	mangaDataKeys := []string{}
+	mangaDatas := map[string]*models.MangaData{}
+	weight := 10000
+
+	c.OnHTML("div.row.c-tabs-item__content", func(e *colly.HTMLElement) {
+		mangaLink := e.ChildAttr("div.col-4.col-12.col-md-2 > div.tab-thumb.c-image-hover a", "href")
+
+		mangaTitle := strings.Replace(mangaLink, "https://klikmanga.com/manga/", "", -1)
+		mangaTitle = strings.Replace(mangaTitle, "/", "", -1)
+
+		compactTitle := e.ChildText("div.col-8.col-12.col-md-10 > div.tab-summary > div.post-title > h3 > a")
+
+		lastChapterLink := e.ChildAttr("div.col-8.col-12.col-md-10 > div.tab-meta > div.meta-item.latest-chap > span.font-meta.chapter > a", "href")
+		prefix := fmt.Sprintf("https://klikmanga.com/manga/%v", mangaTitle)
+		lastChapterID := strings.Replace(lastChapterLink, prefix, "", -1)
+		lastChapterID = strings.Replace(lastChapterID, "/", "", -1)
+
+		lastChapterString := strings.Replace(lastChapterID, "chapter-", "", -1)
+		lastChapterInt, _ := strconv.ParseFloat(lastChapterString, 64)
+
+		imageURL := e.ChildAttr("div.col-4.col-12.col-md-2 > div > a > img", "src")
+
+		mangaData := models.MangaData{
+			Title:            mangaTitle,
+			ImageURL:         imageURL,
+			CompactTitle:     compactTitle,
+			LastChapterID:    lastChapterID,
+			MangaLastChapter: int(lastChapterInt),
+			Weight:           weight,
+		}
+
+		mangaDatas[mangaData.Title] = &mangaData
+		mangaDataKeys = append(mangaDataKeys, mangaData.Title)
+		weight--
+	})
+
+	c.SetRequestTimeout(60 * time.Second)
+	requestData := strings.NewReader(fmt.Sprintf(`action=madara_load_more&page=%v&template=madara-core/content/content-search&vars[s]=%v&vars[orderby]=meta_value_num&vars[paged]=1&vars[template]=search&vars[meta_query][0][0][key]=_wp_manga_status&vars[meta_query][0][0][value][]=end&vars[meta_query][0][0][compare]=IN&vars[meta_query][0][relation]=AND&vars[meta_query][relation]=OR&vars[post_type]=wp-manga&vars[post_status]=publish&vars[meta_key]=_latest_update&vars[order]=desc&vars[manga_archives_item_layout]=big_thumbnail`, searchParams.Page, searchParams.Title))
+	err := c.Request(
+		"POST",
+		"https://klikmanga.com/wp-admin/admin-ajax.php",
+		requestData,
+		colly.NewContext(),
+		http.Header{
+			"content-type":       []string{"application/x-www-form-urlencoded; charset=UTF-8"},
+			"Authority":          []string{"klikmanga.com"},
+			"Sec-Ch-Ua":          []string{"\"Google Chrome\";v=\"93\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"93\""},
+			"Accept-Language":    []string{"en-US,en;q=0.9,id;q=0.8"},
+			"Sec-Ch-Ua-Mobile":   []string{"?0"},
+			"User-Agent":         []string{"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"},
+			"Content-Type":       []string{"application/x-www-form-urlencoded; charset=UTF-8"},
+			"Accept":             []string{"*/*"},
+			"X-Requested-With":   []string{"XMLHttpRequest"},
+			"Sec-Ch-Ua-Platform": []string{"\"macOS\""},
+			"Origin":             []string{"https://klikmanga.com"},
+			"Sec-Fetch-Site":     []string{"same-origin"},
+			"Sec-Fetch-Mode":     []string{"cors"},
+			"Sec-Fetch-Dest":     []string{"empty"},
+			"Referer":            []string{"https://klikmanga.com/"},
+		},
+	)
 	if err != nil {
 		logrus.Errorf("ScrapKlikMangaSearch: %v\n", err)
 	}

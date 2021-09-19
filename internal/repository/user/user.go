@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/umarkotak/go-animapu/internal/models"
@@ -103,6 +104,10 @@ func SetKlikMangaHistory(userData models.UserData, klikMangaHistory models.KlikM
 	if klikMangaHistory.Title == "" {
 		return fmt.Errorf("Title cannot be empty")
 	}
+
+	now := time.Now().UTC()
+	klikMangaHistory.UpdatedAt = now.String()
+	klikMangaHistory.UpdatedAtUnix = fmt.Sprintf("%v", now.Unix())
 
 	firebaseDB := firebaseHelper.GetFirebaseDB()
 
