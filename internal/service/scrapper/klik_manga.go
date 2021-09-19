@@ -157,7 +157,7 @@ func ScrapKlikMangaDetailPage(title string) models.MangaDetail {
 	}
 
 	c.OnHTML("body > div.wrap > div > div.site-content > div > div.profile-manga > div > div > div > div.post-title > h1", func(e *colly.HTMLElement) {
-		mangaDetail.CompactTitle = e.Text
+		mangaDetail.CompactTitle = strings.Trim(e.Text, " ")
 	})
 
 	c.OnHTML("body > div.wrap > div > div.site-content > div > div.c-page-content.style-1 > div > div > div > div.main-col.col-md-8.col-sm-8 > div > div.c-page > div > div.page-content-listing.single-page > div > ul > li", func(e *colly.HTMLElement) {
