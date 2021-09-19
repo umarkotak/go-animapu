@@ -80,9 +80,9 @@ func Start() {
 	router.POST("/users/add_manga_library", cUser.AddToMyMangaLibrary)
 	router.GET("/users/manga_library", cUser.GetMyLibrary)
 	router.POST("/users/remove_manga_library", cUser.RemoveMyLibrary)
-
-	// users analytic
 	router.POST("/users/analytic_v1", cAnalytic.PostUserAnalyticV1)
+	router.POST("/users/klik_manga/history", cUser.PostKlikMangaHistory)
+	router.GET("/users/klik_manga/history", cUser.GetKlikMangaHistory)
 
 	// clip
 	router.GET("/clips", cClips.GetClips)

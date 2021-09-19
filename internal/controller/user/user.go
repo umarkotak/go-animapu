@@ -1,7 +1,6 @@
-package manga
+package user
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 
@@ -135,8 +134,6 @@ func LogReadHistories(c *gin.Context) {
 		userData.ReadHistories = make(map[string]*models.ReadHistory)
 	}
 	userData.ReadHistories[readHistory.MangaTitle] = &readHistory
-
-	fmt.Println(userData, readHistory)
 
 	userData, err = sUser.RecordLastReadHistory(userData)
 

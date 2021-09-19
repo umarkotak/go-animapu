@@ -1,9 +1,11 @@
-package manga
+package user
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/sirupsen/logrus"
 	"github.com/umarkotak/go-animapu/internal/models"
 	firebaseHelper "github.com/umarkotak/go-animapu/internal/utils/firebase_helper"
 )
@@ -91,4 +93,45 @@ func RemoveMangaFromMyLibrary(userData models.UserData, myLibrary models.MyLibra
 
 	selectedMangaRef := myLibraryRef.Child(myLibrary.MangaTitle)
 	selectedMangaRef.Delete(ctx)
+}
+
+func SetKlikMangaHistory(userData models.UserData, klikMangaHistory models.KlikMangaHistory) error {
+	if userData.Username == "" {
+		return fmt.Errorf("User not found")
+	}
+
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+
+	userRef := firebaseDB.NewRef("user_db")
+	selectedUserRef := userRef.Child(userData.Username)
+	klikMangaHistoriesRef := selectedUserRef.Child("klik_manga_histories_map")
+	selectedKlikMangaHistoriesRef := klikMangaHistoriesRef.Child(klikMangaHistory.Title)
+	err := selectedKlikMangaHistoriesRef.Set(context.Background(), klikMangaHistory)
+	if err != nil {
+		logrus.Errorln(err)
+		return err
+	}
+
+	return nil
+}
+
+func GetKlikMangaHistories(userData models.UserData, klikMangaHistory models.KlikMangaHistory) (map[string]models.KlikMangaHistory, error) {
+	klikMangaHistoriesMap := map[string]models.KlikMangaHistory{}
+
+	if userData.Username == "" {
+		return klikMangaHistoriesMap, fmt.Errorf("User not found")
+	}
+
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+
+	userRef := firebaseDB.NewRef("user_db")
+	selectedUserRef := userRef.Child(userData.Username)
+	klikMangaHistoriesRef := selectedUserRef.Child("klik_manga_histories_map")
+	err := klikMangaHistoriesRef.Get(context.Background(), &klikMangaHistoriesMap)
+	if err != nil {
+		logrus.Errorln(err)
+		return klikMangaHistoriesMap, err
+	}
+
+	return klikMangaHistoriesMap, nil
 }
