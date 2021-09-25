@@ -133,6 +133,13 @@ func MangaupdatesReleaseSearch(mangaupdateID string) (models.MangaDetail, error)
 		}
 		if e.Attr("class") == "col-1 text text-center" {
 			chapter := e.ChildText("span")
+
+			chapterSplitted := strings.Split(chapter, "-")
+
+			if len(chapterSplitted) > 1 {
+				chapter = chapterSplitted[len(chapterSplitted)-1]
+			}
+
 			if chapter != "" {
 				chapterInt, err := strconv.ParseInt(chapter, 10, 64)
 				if err == nil {

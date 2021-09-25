@@ -135,7 +135,7 @@ func LogReadHistories(c *gin.Context) {
 	}
 	userData.ReadHistories[readHistory.MangaTitle] = &readHistory
 
-	userData, err = sUser.RecordLastReadHistory(userData)
+	userData, err = sUser.RecordLastReadHistory(userData, readHistory)
 
 	var response gin.H
 	var statusCode int

@@ -11,6 +11,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/umarkotak/go-animapu/internal/models"
+	rManga "github.com/umarkotak/go-animapu/internal/repository/manga"
 	sOnesignal "github.com/umarkotak/go-animapu/internal/service/onesignal"
 	"github.com/umarkotak/go-animapu/internal/service/scrapper"
 	pkgAppCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
@@ -111,13 +112,12 @@ func UpdateMangaChaptersV2(mangaDB models.MangaDB) models.MangaDB {
 			continue
 		}
 
-		logrus.Infof("updating:", idx, mangaTitle)
-
 		wg.Add(1)
 		// go checkMangaLatestChapter(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
 		// go checkMangaLatestChapterV2(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
 		// syncMangaUpdatesID(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
-		checkMangaLatestChapterV3(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles)
+		logrus.Infof("UPDATING %v/%v: %v\n", idx, len(keys), mangaTitle)
+		checkMangaLatestChapterV3(&wg, mangaTitle, &tempMangaDB, &updatedMangaTitles, idx)
 
 		currCount++
 	}
@@ -263,11 +263,11 @@ func syncMangaUpdatesID(wg *sync.WaitGroup, mangaTitle string, mangaDB *models.M
 	mangaDBMutex.Unlock()
 }
 
-func checkMangaLatestChapterV3(wg *sync.WaitGroup, mangaTitle string, mangaDB *models.MangaDB, updatedMangaTitles *[]string) {
+func checkMangaLatestChapterV3(wg *sync.WaitGroup, mangaTitle string, mangaDB *models.MangaDB, updatedMangaTitles *[]string, idx int) {
 	defer wg.Done()
 	// rand.Seed(time.Now().UnixNano())
 	// n := rand.Intn(10)
-	// time.Sleep(time.Duration(n) * time.Millisecond)
+	// time.Sleep(time.Duration(idx*1250) * time.Millisecond)
 
 	mangaDBMutex.RLock()
 	mangaData := mangaDB.MangaDatas[mangaTitle]
@@ -289,17 +289,35 @@ func checkMangaLatestChapterV3(wg *sync.WaitGroup, mangaTitle string, mangaDB *m
 		return
 	}
 
-	mangaupdatesData, err := scrapper.MangaupdatesReleaseSearch(mangaData.MangaUpdatesID)
-	if err != nil {
+	if time.Now().Unix()-mangaData.LastUpdatedAt <= int64(10*60) {
+		mangaData.NewAdded++
+		return
+	}
+
+	var mangaupdatesData models.MangaDetail
+	var err error
+
+	sleepTime := 1000
+	for {
+		mangaupdatesData, err = scrapper.MangaupdatesReleaseSearch(mangaData.MangaUpdatesID)
+		if err == nil || sleepTime >= 10000 {
+			break
+		}
 		logrus.Errorf("Error updates: %v; %v\n", mangaData.Title, err)
+		time.Sleep(time.Duration(sleepTime) * time.Millisecond)
+		sleepTime = sleepTime + 1000
 	}
 
 	if int(mangaupdatesData.LastChapterInt) > mangaData.MangaLastChapter {
 		mangaData.MangaLastChapter = int(mangaupdatesData.LastChapterInt)
 		mangaData.NewAdded = 1
+		logrus.Infof("Updated: %v - %v", mangaTitle, mangaData.MangaLastChapter)
 	} else {
 		mangaData.NewAdded++
 	}
+	mangaData.LastUpdatedAt = time.Now().Unix()
+
+	go rManga.UpdateOneMangaToFireBase(*mangaData)
 
 	mangaDBMutex.Lock()
 	mangaDB.MangaDatas[mangaTitle] = mangaData

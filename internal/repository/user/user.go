@@ -96,6 +96,27 @@ func RemoveMangaFromMyLibrary(userData models.UserData, myLibrary models.MyLibra
 	selectedMangaRef.Delete(ctx)
 }
 
+// SetUserToFirebase set user to firebase
+func SetMangahubHistory(userData models.UserData, readHistory models.ReadHistory) models.UserData {
+	if userData.Username == "" {
+		return userData
+	}
+
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+	rootRef := firebaseDB.NewRef("")
+	userDBRef := rootRef.Child("user_db")
+	selectedUserRef := userDBRef.Child(userData.Username)
+	userReadHistoryRef := selectedUserRef.Child("ReadHistories")
+	readHistoryRef := userReadHistoryRef.Child(readHistory.MangaTitle)
+	err := readHistoryRef.Set(ctx, readHistory)
+
+	if err != nil {
+		log.Fatalln("Error setting value:", err)
+	}
+
+	return userData
+}
+
 func SetKlikMangaHistory(userData models.UserData, klikMangaHistory models.KlikMangaHistory) error {
 	if userData.Username == "" {
 		return fmt.Errorf("User not found")

@@ -108,6 +108,20 @@ func UpdateMangaToFireBase(mangaDB models.MangaDB) models.MangaDB {
 	return mangaDB
 }
 
+func UpdateOneMangaToFireBase(mangaData models.MangaData) models.MangaData {
+	firebaseDB := firebaseHelper.GetFirebaseDB()
+
+	ref := firebaseDB.NewRef("")
+	mangaDBRef := ref.Child("manga_db")
+	selectedMangaRef := mangaDBRef.Child(mangaData.Title)
+	err := selectedMangaRef.Set(ctx, mangaData)
+	if err != nil {
+		log.Fatalln("Error setting value:", err)
+	}
+
+	return mangaData
+}
+
 func AddMangaToFireBaseGeneralLibrary(mangaData models.MangaData) (models.MangaData, error) {
 	firebaseDB := firebaseHelper.GetFirebaseDB()
 	rootRef := firebaseDB.NewRef("")

@@ -52,8 +52,8 @@ func DetailService(auth string) (models.UserData, error) {
 }
 
 // RecordLastReadHistory set user data to firebase
-func RecordLastReadHistory(userData models.UserData) (models.UserData, error) {
-	rUser.SetUserToFirebase(userData)
+func RecordLastReadHistory(userData models.UserData, readHistory models.ReadHistory) (models.UserData, error) {
+	rUser.SetMangahubHistory(userData, readHistory)
 
 	return userData, nil
 }
