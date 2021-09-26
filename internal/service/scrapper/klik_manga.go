@@ -104,8 +104,6 @@ func ScrapKlikMangaHomeNextPage(pageNo int64) models.MangaDB {
 		mangaDatas[mangaTitle] = &mangaData
 		mangaDataKeys = append(mangaDataKeys, mangaTitle)
 		weight--
-
-		fmt.Println(mangaTitle, lastChapterID)
 	})
 
 	requestData := strings.NewReader(fmt.Sprintf(`action=madara_load_more&page=%v&template=madara-core/content/content-archive&vars[orderby%%5D=meta_value_num&vars[paged%%5D=1&vars[posts_per_page%%5D=40&vars[tax_query][relation]=OR&vars[meta_query][0][relation]=AND&vars[meta_query][relation]=OR&vars[post_type]=wp-manga&vars[post_status]=publish&vars[meta_key]=_latest_update&vars[order]=desc&vars[sidebar]=right&vars[manga_archives_item_layout]=big_thumbnail`, pageNo))

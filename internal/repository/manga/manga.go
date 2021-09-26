@@ -10,6 +10,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/sirupsen/logrus"
 	"github.com/umarkotak/go-animapu/internal/models"
 	pkgAppCache "github.com/umarkotak/go-animapu/internal/utils/app_cache"
 	firebaseHelper "github.com/umarkotak/go-animapu/internal/utils/firebase_helper"
@@ -141,4 +142,35 @@ func AddMangaToFireBaseGeneralLibrary(mangaData models.MangaData) (models.MangaD
 	}
 
 	return mangaData, nil
+}
+
+func SetMangaDBToCache(key string, mangaDB models.MangaDB) error {
+	logrus.Infof("SetMangaDBToCache, Key: %v\n", key)
+
+	mangaDBByte, err := json.Marshal(mangaDB)
+	if err != nil {
+		logrus.Errorln(err)
+		return err
+	}
+	pkgAppCache.GetAppCache().Set(key, string(mangaDBByte), 5*time.Minute)
+	return nil
+}
+
+func GetMangaDBFromCache(key string) (models.MangaDB, error) {
+	logrus.Infof("GetMangaDBFromCache, Key: %v\n", key)
+
+	var err error
+	mangaDB := models.MangaDB{}
+	intf, found := pkgAppCache.GetAppCache().Get(key)
+	if !found || intf == nil {
+		err = fmt.Errorf("Cache Not Found, Key: %v\n", key)
+		logrus.Errorln(err)
+		return mangaDB, err
+	}
+	err = json.Unmarshal([]byte(intf.(string)), &mangaDB)
+	if err != nil {
+		logrus.Errorln(err)
+		return mangaDB, err
+	}
+	return mangaDB, nil
 }

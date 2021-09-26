@@ -5,12 +5,22 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/umarkotak/go-animapu/internal/models"
+	"github.com/umarkotak/go-animapu/internal/repository/manga"
 	sScrapper "github.com/umarkotak/go-animapu/internal/service/scrapper"
 	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
 
 func GetKlikMangaHome(c *gin.Context) {
-	result := sScrapper.ScrapKlikMangaHomePage()
+	result, err := manga.GetMangaDBFromCache("GetKlikMangaHome")
+	if err == nil {
+		http_req.RenderResponse(c, 200, result)
+		return
+	}
+
+	result = sScrapper.ScrapKlikMangaHomePage()
+	if len(result.MangaDataKeys) > 0 {
+		manga.SetMangaDBToCache("GetKlikMangaHome", result)
+	}
 
 	http_req.RenderResponse(c, 200, result)
 }
