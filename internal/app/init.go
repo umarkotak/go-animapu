@@ -102,6 +102,7 @@ func Start() {
 	router.GET("/mangaupdates/releases", cMangaupdates.GetReleases)
 	router.GET("/mangaupdates/series", cMangaupdates.GetSeries)
 	router.GET("/mangaupdates/search", cMangaupdates.Search)
+	router.GET("/mangaupdates/detail/:manga_title", cMangaupdates.GetDetailByTitle)
 
 	// klik manga scrapper
 	// HOME: https://klikmanga.com/

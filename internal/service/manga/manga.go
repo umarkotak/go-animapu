@@ -299,7 +299,7 @@ func checkMangaLatestChapterV3(wg *sync.WaitGroup, mangaTitle string, mangaDB *m
 
 	sleepTime := 1000
 	for {
-		mangaupdatesData, err = scrapper.MangaupdatesReleaseSearch(mangaData.MangaUpdatesID)
+		mangaupdatesData, err = scrapper.MangaupdatesSeriesDetailByID(mangaData.MangaUpdatesID)
 		if err == nil || sleepTime >= 10000 {
 			break
 		}

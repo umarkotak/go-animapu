@@ -111,7 +111,7 @@ func MangaupdatesGetReleases() (models.MangaDB, error) {
 	return mangaDB, nil
 }
 
-func MangaupdatesReleaseSearch(mangaupdateID string) (models.MangaDetail, error) {
+func MangaupdatesSeriesDetailByID(mangaupdateID string) (models.MangaDetail, error) {
 	mangaDetail := models.MangaDetail{}
 
 	url := fmt.Sprintf("https://www.mangaupdates.com/releases.html?stype=series&search=%v&page=1&perpage=100&orderby=date&asc=desc", mangaupdateID)
@@ -226,6 +226,65 @@ func MangaupdatesSearch(title string) (models.MangaDB, error) {
 	}
 
 	return mangaDB, nil
+}
+
+func MangaupdatesSeriesDetailByTitle(title string) (models.MangaDetail, error) {
+	mangaDetail := models.MangaDetail{}
+
+	url := fmt.Sprintf("https://www.mangaupdates.com/series.html?search=%v", title)
+	c := colly.NewCollector()
+
+	c.OnHTML("#main_content > div.p-2.pt-2.pb-2.text > div:nth-child(2) > div:nth-child(3) > div > div.col.text.p-1.pl-3 > div > div:nth-child(1) > a", func(e *colly.HTMLElement) {
+		mangaDetail.DetailLink = e.Attr("href")
+		mangaupdatesIDRaw := strings.Split(mangaDetail.DetailLink, "series.html?id=")
+		if len(mangaupdatesIDRaw) > 0 {
+			mangaDetail.MangaUpdatesID = mangaupdatesIDRaw[len(mangaupdatesIDRaw)-1]
+		}
+	})
+
+	c.Visit(url)
+
+	cDetail := colly.NewCollector()
+
+	cDetail.OnHTML("#main_content > div:nth-child(2) > div.row.no-gutters > div.col-12.p-2 > span.releasestitle.tabletitle", func(e *colly.HTMLElement) {
+		mangaDetail.CompactTitle = e.Text
+		mangaDetail.Title = mangahubTitleCostructor(mangaDetail.CompactTitle)
+	})
+
+	cDetail.OnHTML("#main_content > div:nth-child(2) > div.row.no-gutters > div:nth-child(4) > div:nth-child(5)", func(e *colly.HTMLElement) {
+		mangaDetail.Genres = e.Text
+	})
+
+	cDetail.OnHTML("#main_content > div:nth-child(2) > div.row.no-gutters > div:nth-child(4) > div:nth-child(2) > center > img", func(e *colly.HTMLElement) {
+		mangaDetail.ImageURL = e.Attr("href")
+	})
+
+	cDetail.OnHTML("#div_desc_link", func(e *colly.HTMLElement) {
+		mangaDetail.Description = e.Text
+	})
+
+	cDetail.OnHTML("#main_content > div:nth-child(2) > div.row.no-gutters > div:nth-child(3) > div:nth-child(17) > i:nth-child(1)", func(e *colly.HTMLElement) {
+		chapter := e.Text
+		chapterSplitted := strings.Split(chapter, "-")
+		if len(chapterSplitted) > 1 {
+			chapter = chapterSplitted[len(chapterSplitted)-1]
+		}
+
+		mangaDetail.LastChapter = chapter
+
+		chapterFloat, _ := strconv.ParseFloat(mangaDetail.LastChapter, 64)
+
+		mangaDetail.LastChapterInt = int64(chapterFloat)
+
+		mangaDetail.ChaptersInt = []int64{}
+		for i := int64(1); i <= mangaDetail.LastChapterInt; i++ {
+			mangaDetail.ChaptersInt = append(mangaDetail.ChaptersInt, i)
+		}
+	})
+
+	cDetail.Visit(mangaDetail.DetailLink)
+
+	return mangaDetail, nil
 }
 
 func mangahubTitleCostructor(source string) string {
