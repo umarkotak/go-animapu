@@ -2,6 +2,7 @@ package manga
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/umarkotak/go-animapu/internal/repository/manga"
 	sScrapper "github.com/umarkotak/go-animapu/internal/service/scrapper"
 	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
@@ -25,7 +26,16 @@ func GetMangaSearch(c *gin.Context) {
 
 // GetMangaTodays list of todays manga
 func GetMangaTodays(c *gin.Context) {
-	mangaDB := sScrapper.GetTodaysMangaTitleV2()
+	mangaDB, err := manga.GetMangaDBFromCache("GetMangaTodays")
+	if err == nil {
+		http_req.RenderResponse(c, 200, mangaDB)
+		return
+	}
+
+	mangaDB = sScrapper.GetTodaysMangaTitleV2()
+	if len(mangaDB.MangaDatas) > 0 {
+		manga.SetMangaDBToCache("GetMangaTodays", mangaDB)
+	}
 
 	http_req.RenderResponse(c, 200, mangaDB)
 }
