@@ -50,13 +50,13 @@ func GetMangaFirebase(c *gin.Context) {
 
 // UpdateMangaFirebase update mangat to firebase
 func UpdateMangaFirebase(c *gin.Context) {
-	updated, _ := appCache.GetAppCache().Get("UPDATED_MANGA_CACHE")
+	// updated, _ := appCache.GetAppCache().Get("UPDATED_MANGA_CACHE")
+	updated := "nil"
 
 	// mangaDB := rManga.GetMangaFromFireBaseV2()
 	mangaDB := rManga.GetMangaFromFireBaseV2WithoutCache()
 	// mangaDB = sManga.UpdateMangaChapters(mangaDB)
-	if updated == nil {
-		fmt.Println("DIRECT UPDATE")
+	if updated == "nil" {
 		appCache.GetAppCache().Set("UPDATED_MANGA_CACHE", "UPDATED", 5*time.Minute)
 		mangaDB = sManga.UpdateMangaChaptersV2(mangaDB)
 		// go rManga.UpdateMangaToFireBase(mangaDB)
