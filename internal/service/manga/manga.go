@@ -281,16 +281,14 @@ func checkMangaLatestChapterV3(wg *sync.WaitGroup, mangaTitle string, mangaDB *m
 	}
 
 	if mangaData.MangaUpdatesID == "" {
-		return
-	}
-
-	if mangaData.NewAdded <= 3 {
 		mangaData.NewAdded++
+		go rManga.UpdateOneMangaToFireBase(*mangaData)
 		return
 	}
 
 	if time.Now().Unix()-mangaData.LastUpdatedAt <= int64(10*60) {
 		mangaData.NewAdded++
+		go rManga.UpdateOneMangaToFireBase(*mangaData)
 		return
 	}
 
@@ -309,6 +307,7 @@ func checkMangaLatestChapterV3(wg *sync.WaitGroup, mangaTitle string, mangaDB *m
 	}
 
 	if int(mangaupdatesData.LastChapterInt) > mangaData.MangaLastChapter {
+		logrus.Infof("%v; %v -> %v\n", mangaTitle, mangaupdatesData.LastChapterInt, mangaData.MangaLastChapter)
 		mangaData.MangaLastChapter = int(mangaupdatesData.LastChapterInt)
 		mangaData.NewAdded = 1
 		logrus.Infof("Updated: %v - %v", mangaTitle, mangaData.MangaLastChapter)
