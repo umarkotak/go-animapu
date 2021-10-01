@@ -2,6 +2,7 @@ package mangaupdates
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/umarkotak/go-animapu/internal/repository/manga"
 	"github.com/umarkotak/go-animapu/internal/service/scrapper"
 	"github.com/umarkotak/go-animapu/internal/utils/http_req"
 )
@@ -17,10 +18,19 @@ func GetSeries(c *gin.Context) {
 }
 
 func GetReleases(c *gin.Context) {
-	mangaDB, err := scrapper.MangaupdatesGetReleases()
+	mangaDB, err := manga.GetMangaDBFromCache("MangaupdatesGetReleases")
+	if err == nil {
+		http_req.RenderResponse(c, 200, mangaDB)
+		return
+	}
+
+	mangaDB, err = scrapper.MangaupdatesGetReleases()
 	if err != nil {
 		http_req.RenderResponse(c, 422, err)
 		return
+	}
+	if len(mangaDB.MangaDatas) > 0 {
+		manga.SetMangaDBToCache("MangaupdatesGetReleases", mangaDB)
 	}
 
 	http_req.RenderResponse(c, 200, mangaDB)

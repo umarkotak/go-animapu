@@ -40,8 +40,6 @@ func MangaupdatesGetSeries(mangaID string) ([]MangaUpdatesResult, error) {
 }
 
 func MangaupdatesGetReleases() (models.MangaDB, error) {
-	url := fmt.Sprintf("https://www.mangaupdates.com/releases.html")
-
 	mangaDatas := map[string]*models.MangaData{}
 	mangaDB := models.MangaDB{MangaDatas: mangaDatas}
 
@@ -102,7 +100,13 @@ func MangaupdatesGetReleases() (models.MangaDB, error) {
 	})
 
 	c.SetRequestTimeout(60 * time.Second)
-	err := c.Visit(url)
+	var err error
+	err = c.Visit("https://www.mangaupdates.com/releases.html?page=1")
+	if err != nil {
+		logrus.Errorf("There is some error: %v", err)
+		return mangaDB, err
+	}
+	err = c.Visit("https://www.mangaupdates.com/releases.html?page=2")
 	if err != nil {
 		logrus.Errorf("There is some error: %v", err)
 		return mangaDB, err
