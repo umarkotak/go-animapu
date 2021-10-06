@@ -13,6 +13,7 @@ import (
 	cAnimes "github.com/umarkotak/go-animapu/internal/controller/animes"
 	cChats "github.com/umarkotak/go-animapu/internal/controller/chats"
 	cClips "github.com/umarkotak/go-animapu/internal/controller/clips"
+	cGoplay "github.com/umarkotak/go-animapu/internal/controller/goplay"
 	cManga "github.com/umarkotak/go-animapu/internal/controller/manga"
 	cMangadex "github.com/umarkotak/go-animapu/internal/controller/mangadex"
 	cMangaupdates "github.com/umarkotak/go-animapu/internal/controller/mangaupdates"
@@ -96,6 +97,9 @@ func Start() {
 
 	// mangadex proxy
 	router.GET("/mangadex/*mangadex_path", cMangadex.GetProxy)
+
+	// goplay api proxy
+	router.GET("/goplay_api/*goplay_api_path", cGoplay.GetProxy)
 
 	// mangaupdates scrapper
 	router.GET("/mangaupdates/releases/:mangaupdates_id", cMangaupdates.ReleasesSearch)
