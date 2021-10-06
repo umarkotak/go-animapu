@@ -21,7 +21,7 @@ func GetProxy(c *gin.Context) {
 	if err != nil {
 		http_req.RenderResponse(c, 422, fmt.Sprintf("error: %v", err))
 	}
-	req.Header.Add("Authorization", c.Request.Header["Authorization"][0])
+	// req.Header.Add("Authorization", c.Request.Header["Authorization"][0])
 
 	resp, err := client.Do(req)
 	if err != nil {
