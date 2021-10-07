@@ -15,6 +15,7 @@ import (
 func GetProxy(c *gin.Context) {
 	goplayPath := c.Request.URL.String()
 	goplayFullPath := strings.Replace(goplayPath, "/goplay_api", "https://goplay.co.id/api", -1)
+	goplayFullPath = strings.Replace(goplayPath, "/goplay_api_integration", "https://r7lk8n0srbams5t7sl7q.goplay.co.id/api", -1)
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", goplayFullPath, nil)

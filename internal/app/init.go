@@ -100,6 +100,7 @@ func Start() {
 
 	// goplay api proxy
 	router.GET("/goplay_api/*goplay_api_path", cGoplay.GetProxy)
+	router.GET("/goplay_api_integration/*goplay_api_path", cGoplay.GetProxy)
 
 	// mangaupdates scrapper
 	router.GET("/mangaupdates/releases/:mangaupdates_id", cMangaupdates.ReleasesSearch)
