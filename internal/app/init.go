@@ -17,6 +17,7 @@ import (
 	cManga "github.com/umarkotak/go-animapu/internal/controller/manga"
 	cMangadex "github.com/umarkotak/go-animapu/internal/controller/mangadex"
 	cMangaupdates "github.com/umarkotak/go-animapu/internal/controller/mangaupdates"
+	cProxy "github.com/umarkotak/go-animapu/internal/controller/proxy"
 	cSocketGame "github.com/umarkotak/go-animapu/internal/controller/socket_game"
 	cUser "github.com/umarkotak/go-animapu/internal/controller/user"
 	"github.com/umarkotak/go-animapu/internal/models"
@@ -109,11 +110,8 @@ func Start() {
 	router.GET("/mangaupdates/search", cMangaupdates.Search)
 	router.GET("/mangaupdates/detail/:manga_title", cMangaupdates.GetDetailByTitle)
 
-	// klik manga scrapper
-	// HOME: https://klikmanga.com/
-	// DETAIL WITH CHAPTER: https://klikmanga.com/manga/solo-leveling/
-	// CHAPTER: https://klikmanga.com/manga/solo-leveling/chapter-167/
-	// SEARCH: https://klikmanga.com/?s=solo+leveling&post_type=wp-manga
+	// global proxy
+	router.GET("/proxy/*url", cProxy.GetProxy)
 
 	// web sockets
 	hub := models.NewHub()
