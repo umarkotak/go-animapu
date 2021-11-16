@@ -174,3 +174,33 @@ func GetMangaDBFromCache(key string) (models.MangaDB, error) {
 	}
 	return mangaDB, nil
 }
+
+func SetObjectToCache(key string, object interface{}) error {
+	logrus.Infof("SetMangaDBToCache, Key: %v\n", key)
+
+	mangaDBByte, err := json.Marshal(object)
+	if err != nil {
+		logrus.Errorln(err)
+		return err
+	}
+	pkgAppCache.GetAppCache().Set(key, string(mangaDBByte), 5*time.Minute)
+	return nil
+}
+
+func GetAnimapuMangasFromCache(key string, destinationObject *[]models.MangaData) error {
+	logrus.Infof("GetMangaDBFromCache, Key: %v\n", key)
+
+	var err error
+	intf, found := pkgAppCache.GetAppCache().Get(key)
+	if !found || intf == nil {
+		err = fmt.Errorf("Cache Not Found, Key: %v\n", key)
+		logrus.Errorln(err)
+		return err
+	}
+	err = json.Unmarshal([]byte(intf.(string)), destinationObject)
+	if err != nil {
+		logrus.Errorln(err)
+		return err
+	}
+	return nil
+}

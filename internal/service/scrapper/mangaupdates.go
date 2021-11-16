@@ -291,6 +291,77 @@ func MangaupdatesSeriesDetailByTitle(title string) (models.MangaDetail, error) {
 	return mangaDetail, nil
 }
 
+func MangaupdatesGetReleasesV2() ([]models.MangaData, error) {
+	animapuMangas := []models.MangaData{}
+
+	c := colly.NewCollector()
+
+	prevTitle := ""
+	perveMangadexID := ""
+	idx := 100000
+
+	c.OnHTML("div.alt.p-1 div.row.no-gutters div", func(e *colly.HTMLElement) {
+		if e.Attr("class") == "col-6 pbreak" {
+			prevTitle = e.ChildText("a")
+			perveMangadexID = e.ChildAttr("a", "href")
+			mangaupdatesIDRaw := strings.Split(perveMangadexID, "series.html?id=")
+			if len(mangaupdatesIDRaw) >= 2 {
+				perveMangadexID = mangaupdatesIDRaw[1]
+			}
+		}
+
+		if e.Attr("class") == "col-2 pl-1 pbreak" {
+			mangahubTitle := mangahubTitleCostructor(prevTitle)
+			mangaLastChapters := strings.Split(e.Text, "c.")
+			var mangaLastChapterString string
+			if len(mangaLastChapters) > 0 {
+				mangaLastChapterString = mangaLastChapters[len(mangaLastChapters)-1]
+			} else {
+				mangaLastChapterString = ""
+			}
+
+			mangaLastChapterBreaked := strings.Split(mangaLastChapterString, "-")
+			if len(mangaLastChapterBreaked) > 0 {
+				mangaLastChapterString = mangaLastChapterBreaked[len(mangaLastChapterBreaked)-1]
+			}
+
+			mangaLastChapterString = strings.Replace(mangaLastChapterString, "a", "", -1)
+			mangaLastChapterString = strings.Replace(mangaLastChapterString, "b", "", -1)
+			mangaLastChapterString = strings.Replace(mangaLastChapterString, "c", "", -1)
+			var mangaLastChapter float64
+			mangaLastChapter, err := strconv.ParseFloat(mangaLastChapterString, 64)
+			if err != nil {
+				mangaLastChapter = 150
+			}
+
+			mangaData := models.MangaData{
+				Title:            mangahubTitle,
+				CompactTitle:     prevTitle,
+				MangaLastChapter: int(mangaLastChapter),
+				Weight:           idx,
+				MangaUpdatesID:   perveMangadexID,
+			}
+			idx--
+			animapuMangas = append(animapuMangas, mangaData)
+		}
+	})
+
+	c.SetRequestTimeout(60 * time.Second)
+	var err error
+	err = c.Visit("https://www.mangaupdates.com/releases.html?page=1")
+	if err != nil {
+		logrus.Errorf("There is some error: %v", err)
+		return animapuMangas, err
+	}
+	err = c.Visit("https://www.mangaupdates.com/releases.html?page=2")
+	if err != nil {
+		logrus.Errorf("There is some error: %v", err)
+		return animapuMangas, err
+	}
+
+	return animapuMangas, nil
+}
+
 func mangahubTitleCostructor(source string) string {
 	result := strings.ToLower(source)
 	result = strings.Replace(result, "%", "", -1)

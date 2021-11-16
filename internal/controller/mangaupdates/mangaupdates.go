@@ -2,6 +2,7 @@ package mangaupdates
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/umarkotak/go-animapu/internal/models"
 	"github.com/umarkotak/go-animapu/internal/repository/manga"
 	"github.com/umarkotak/go-animapu/internal/service/scrapper"
 	"github.com/umarkotak/go-animapu/internal/utils/http_req"
@@ -34,6 +35,28 @@ func GetReleases(c *gin.Context) {
 	}
 
 	http_req.RenderResponse(c, 200, mangaDB)
+}
+
+func GetReleasesV2(c *gin.Context) {
+	animapuMangas := []models.MangaData{}
+
+	err := manga.GetAnimapuMangasFromCache("MangaupdatesGetReleasesV2", &animapuMangas)
+	if err == nil {
+		http_req.RenderResponse(c, 200, animapuMangas)
+		return
+	}
+
+	animapuMangas, err = scrapper.MangaupdatesGetReleasesV2()
+	if err != nil {
+		http_req.RenderResponse(c, 422, err)
+		return
+	}
+
+	if len(animapuMangas) > 0 {
+		manga.SetObjectToCache("MangaupdatesGetReleasesV2", animapuMangas)
+	}
+
+	http_req.RenderResponse(c, 200, animapuMangas)
 }
 
 func GetDetailByTitle(c *gin.Context) {
