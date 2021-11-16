@@ -353,11 +353,6 @@ func MangaupdatesGetReleasesV2() ([]models.MangaData, error) {
 		logrus.Errorf("There is some error: %v", err)
 		return animapuMangas, err
 	}
-	err = c.Visit("https://www.mangaupdates.com/releases.html?page=2")
-	if err != nil {
-		logrus.Errorf("There is some error: %v", err)
-		return animapuMangas, err
-	}
 
 	return animapuMangas, nil
 }
