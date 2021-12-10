@@ -11,6 +11,7 @@ import (
 	baseController "github.com/umarkotak/go-animapu/internal/controller"
 	cAnalytic "github.com/umarkotak/go-animapu/internal/controller/analytic"
 	cAnimes "github.com/umarkotak/go-animapu/internal/controller/animes"
+	cApple "github.com/umarkotak/go-animapu/internal/controller/apple"
 	cChats "github.com/umarkotak/go-animapu/internal/controller/chats"
 	cClips "github.com/umarkotak/go-animapu/internal/controller/clips"
 	cGoplay "github.com/umarkotak/go-animapu/internal/controller/goplay"
@@ -110,6 +111,9 @@ func Start() {
 	router.GET("/mangaupdates/series", cMangaupdates.GetSeries)
 	router.GET("/mangaupdates/search", cMangaupdates.Search)
 	router.GET("/mangaupdates/detail/:manga_title", cMangaupdates.GetDetailByTitle)
+
+	router.POST("/goplay/account/apple/callback", cApple.Callback)
+	router.POST("/goplay/account/apple/callback/redirect", cApple.CallbackRedirect)
 
 	// global proxy
 	router.GET("/proxy/*url", cProxy.GetProxy)
