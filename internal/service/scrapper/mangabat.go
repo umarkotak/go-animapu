@@ -81,6 +81,14 @@ func ScrapMangabatDetail(mangaID string) models.MangaDetail {
 		mangaDetail.ChapterObjs = append(mangaDetail.ChapterObjs, chapterObj)
 	})
 
+	c.OnHTML("body > div.body-site > div.container.container-main > div.container-main-left > div.panel-story-info > div.story-info-left > span.info-image > img", func(e *colly.HTMLElement) {
+		mangaDetail.ImageURL = e.Attr("src")
+	})
+
+	c.OnHTML("#panel-story-info-description", func(e *colly.HTMLElement) {
+		mangaDetail.Description = e.Text
+	})
+
 	err := c.Visit(fmt.Sprintf("https://m.mangabat.com/%v", mangaID))
 	if err != nil {
 		logrus.Errorf("ScrapMangabatDetail: %v\n", err)
