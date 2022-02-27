@@ -112,11 +112,16 @@ func Start() {
 	router.GET("/mangaupdates/search", cMangaupdates.Search)
 	router.GET("/mangaupdates/detail/:manga_title", cMangaupdates.GetDetailByTitle)
 
+	router.GET("/mangabat/home", cManga.GetMangabatHome)
+	router.GET("/mangabat/manga/:manga_id", cManga.GetMangabatMangaDetail)
+	router.GET("/mangabat/read/:manga_id/:chapter_id", cManga.GetMangabatMangaChapterDetail)
+
 	router.POST("/goplay/account/apple/callback", cApple.Callback)
 	router.POST("/goplay/account/apple/callback/redirect", cApple.CallbackRedirect)
 
 	// global proxy
 	router.GET("/proxy/*url", cProxy.GetProxy)
+	router.GET("/image_proxy/*url", cProxy.ImageProxy)
 
 	// web sockets
 	hub := models.NewHub()

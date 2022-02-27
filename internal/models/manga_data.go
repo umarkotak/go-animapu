@@ -15,4 +15,5 @@ type MangaData struct {
 	MangaUpdatesID   string `json:"manga_updates_id"`
 	LastChapterID    string `json:"last_chapter_id"`
 	LastUpdatedAt    int64  `json:"last_updated_at"`
+	LastChapterText  string `json:"last_chapter_text"`
 }
