@@ -5,7 +5,7 @@ type MangaChapterDetail struct {
 	MangadexID     string       `json:"mangadex_id"`
 	MangaUpdatesID string       `json:"manga_updates_id"`
 	Chapter        int          `json:"chapter"`
-	ChapterObjs    []ChapterObj `json:"chapter_obj"`
+	ChapterObjs    []ChapterObj `json:"chapter_objs"`
 	NextChapter    int          `json:"next_chapter"`
 	PrevChapter    int          `json:"prev_chapter"`
 	Images         []string     `json:"images"`

@@ -14,5 +14,5 @@ type MangaDetail struct {
 	LastChapter    string       `json:"last_chapter"`
 	LastChapterInt int64        `json:"last_chapter_int"`
 	DetailLink     string       `json:"detail_link"`
-	ChapterObjs    []ChapterObj `json:"chapter_obj"`
+	ChapterObjs    []ChapterObj `json:"chapter_objs"`
 }
