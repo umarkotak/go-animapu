@@ -86,6 +86,13 @@ func ScrapMangabatDetail(mangaID string) models.MangaDetail {
 		logrus.Errorf("ScrapMangabatDetail: %v\n", err)
 	}
 
+	if mangaDetail.Title == "" {
+		err := c.Visit(fmt.Sprintf("https://read.mangabat.com/%v", mangaID))
+		if err != nil {
+			logrus.Errorf("ScrapMangabatDetail: %v\n", err)
+		}
+	}
+
 	return mangaDetail
 }
 
