@@ -121,5 +121,12 @@ func ScrapMangabatChapterDetail(mangaID, chapterID string) models.MangaChapterDe
 		logrus.Errorf("ScrapMangabatDetail: %v\n", err)
 	}
 
+	if len(mangaChapterDetail.Images) <= 0 {
+		err := c.Visit(fmt.Sprintf("https://read.mangabat.com/%v", chapterID))
+		if err != nil {
+			logrus.Errorf("ScrapMangabatDetail: %v\n", err)
+		}
+	}
+
 	return mangaChapterDetail
 }
